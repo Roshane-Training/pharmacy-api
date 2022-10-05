@@ -16,26 +16,24 @@ app.use(cors([process.env.FRONTEND_URL, process.env.PRODUCTION ? undefined : '*'
 const indexRouter = require('./routes/index.routes')
 const { DevLog } = require('./lib/helpers')
 
-app.use('/', indexRouter)
-
-app.listen(PORT, () => {
-	console.log(
-		`\r==========================================================\n
-		\r\t[*] Endpoints for \x1b[34m${NAME}\x1b[0m are available [*]\n
-		\r\t[*] Local: \x1b[4m\x1b[32mhttp://localhost:${PORT}\x1b[0m\r
-		\r\t[*] Your Network: \x1b[4m\x1b[32m${`http://${ip.address()}`}:${PORT}\x1b[0m\r
-		\r\t[*] MongoDB URI: ${process.env.MONGODB_URI}\r
-		\r\n==========================================================`
-	)
-})
+app.use('/api/v1', indexRouter)
 
 /* Start Express App */
-// mongoose
-// 	.connect(process.env.MONGODB_URI)
-// 	.then(() => {
-
-// 	})
-// 	.catch((err) => {
-// 		console.log('[!] Failed to connect MongoDB')
-// 		DevLog(err)
-// 	})
+mongoose
+	.connect(process.env.MONGODB_URI)
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(
+				`\r==========================================================\n
+				\r\t[*] Endpoints for \x1b[34m${NAME}\x1b[0m are available [*]\n
+				\r\t[*] Local: \x1b[4m\x1b[32mhttp://localhost:${PORT}/api/v1\x1b[0m\r
+				\r\t[*] Your Network: \x1b[4m\x1b[32m${`http://${ip.address()}`}:${PORT}/api/v1\x1b[0m\r
+				\r\t[*] MongoDB URI: ${process.env.MONGODB_URI}\r
+				\r\n==========================================================`
+			)
+		})
+	})
+	.catch((err) => {
+		console.log('[!] Failed to connect MongoDB')
+		DevLog(err)
+	})
