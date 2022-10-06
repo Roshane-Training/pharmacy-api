@@ -4,10 +4,8 @@
 	"useTabs": true,
 	"tabWidth": 3,
 	"semi": false,
-	"jsxSingleQuote": false,
 	"singleQuote": true,
 	"bracketSameLine": true,
 	"printWidth": 90,
-	"bracketSpacing": true,
-	"htmlWhitespaceSensitivity": "css"
+	"bracketSpacing": true
 }

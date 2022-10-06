@@ -6,6 +6,7 @@ const app = express()
 const ip = require('ip')
 const PORT = process.env.PORT || 8080
 const NAME = process.env.NAME || 'amberapp3'
+const API_VER = '/api/v1'
 
 /* Middlewares */
 app.use(express.json())
@@ -14,9 +15,11 @@ app.use(cors([process.env.FRONTEND_URL, process.env.PRODUCTION ? undefined : '*'
 
 /* Routers */
 const indexRouter = require('./routes/index.routes')
+const usersRouter = require('./routes/user.routes')
 const { DevLog } = require('./lib/helpers')
 
-app.use('/api/v1', indexRouter)
+app.use(API_VER, indexRouter)
+app.use(API_VER + '/users', usersRouter)
 
 /* Start Express App */
 mongoose

@@ -1,14 +1,14 @@
 {
 	"name": "amberapp3",
 	"version": "1.0.0",
-	"description": "Just another express api.",
+	"description": "Just another express API.",
 	"main": "app.js",
 	"scripts": {
 		"start": "node app.js",
 		"dev": "nodemon app.js"
 	},
 	"keywords": [],
-	"author": "Roshane-Johnson",
+	"author": "Roshane Johnson",
 	"license": "ISC",
 	"type": "commonjs",
 	"dependencies": {
