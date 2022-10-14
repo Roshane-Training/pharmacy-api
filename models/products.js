@@ -5,6 +5,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     price: {
         type: String,
         required: true
@@ -14,6 +18,7 @@ const productSchema = new mongoose.Schema({
         required: true
 
     }
-})
+});
+
 
 module.exports = mongoose.model('Products', productSchema);
