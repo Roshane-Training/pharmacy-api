@@ -9,7 +9,7 @@ const UserSchema = Schema({
 	email: {
 		type: String,
 		required: true,
-		unique: true,
+		unique: [true, 'this email is currently being used'],
 		validate: {
 			validator: (v) =>
 				/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -23,7 +23,8 @@ const UserSchema = Schema({
 		required: true,
 		validate: {
 			validator: (v) => /\d{3}-\d{3}-\d{4}/.test(v),
-			message: (props) => `${props.value} is not a valid phone number!`,
+			message: (props) =>
+				`${props.value} is not a valid phone number! Try using this pattern 000-000-0000`,
 		},
 	},
 	password: { type: String, required: true },

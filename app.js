@@ -4,19 +4,24 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const app = express()
 const ip = require('ip')
+const path = require('path')
+const morgan = require('morgan')
+
 const PORT = process.env.PORT || 8080
 const NAME = process.env.NAME || 'amberapp3'
 const API_VER = '/api/v1'
 
 /* Middlewares */
+// app.use(morgan('dev'))
+app.use(express.static(path.join(__dirname, 'public'), { redirect: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors([process.env.FRONTEND_URL, process.env.PRODUCTION ? undefined : '*']))
 
 /* Routers */
+const { DevLog } = require('./lib/helpers')
 const indexRouter = require('./routes/index.routes')
 const usersRouter = require('./routes/user.routes')
-const { DevLog } = require('./lib/helpers')
 const productsRouter = require('./routes/products.routes')
 
 app.use(API_VER, indexRouter)
@@ -25,11 +30,11 @@ app.use(API_VER + '/products', productsRouter)
 
 /* Start Express App */
 mongoose
-    .connect(process.env.MONGODB_URI)
-    .then(() => {
-            app.listen(PORT, () => {
-                        console.log(
-                                `\r==========================================================\n
+	.connect(process.env.MONGODB_URI)
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(
+				`\r==========================================================\n
 				\r\t[*] Endpoints for \x1b[34m${NAME}\x1b[0m are available [*]\n
 				\r\t[*] Local: \x1b[4m\x1b[32mhttp://localhost:${PORT}/api/v1\x1b[0m\r
 				\r\t[*] Your Network: \x1b[4m\x1b[32m${`http://${ip.address()}`}:${PORT}/api/v1\x1b[0m\r
