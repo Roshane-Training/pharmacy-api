@@ -1,8 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const UserController = require('../controllers/user')
+const UserController = require('../controllers/user.controller')
+const Upload = require('../middlewares/multer')
 
-router.route('/').get(UserController.getAll).post(UserController.createOne)
+router
+	.route('/')
+	.get(UserController.getAll)
+	.post(Upload.single('image'), UserController.createOne)
 
 router
 	.route('/:id')
