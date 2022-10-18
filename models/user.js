@@ -3,9 +3,19 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const UserSchema = Schema({
-	firstName: { type: String, required: true },
-	lastName: { type: String, required: true },
-	image: { type: String, required: true },
+	fullName: { type: String, required: true },
+	// firstName: { type: String, required: true },
+	// lastName: { type: String, required: true },
+	// image: { type: String, required: true },
+	phoneNumber: {
+		type: String,
+		required: true,
+		validate: {
+			validator: (v) => /\d{3}-\d{3}-\d{4}/.test(v),
+			message: (props) =>
+				`${props.value} is not a valid phone number! Try using this pattern 000-000-0000`,
+		},
+	},
 	email: {
 		type: String,
 		required: true,
@@ -16,15 +26,6 @@ const UserSchema = Schema({
 					v
 				),
 			message: (props) => `${props.value} is not a valid email address!`,
-		},
-	},
-	phoneNumber: {
-		type: String,
-		required: true,
-		validate: {
-			validator: (v) => /\d{3}-\d{3}-\d{4}/.test(v),
-			message: (props) =>
-				`${props.value} is not a valid phone number! Try using this pattern 000-000-0000`,
 		},
 	},
 	password: { type: String, required: true },

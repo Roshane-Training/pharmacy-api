@@ -4,7 +4,8 @@ const User = require('../models/user')
 const path = require('path')
 const fs = require('fs')
 
-const USER_SELECT_FILTER = '-password -__v'
+// const USER_SELECT_FILTER = '-password -__v'
+const USER_SELECT_FILTER = ''
 
 class UserController {
 	/**
@@ -13,34 +14,35 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const uploadedImagePath = path.resolve(req.file.path)
-		const uploadedImage = path
-			.join(path.dirname(req.file.path), path.basename(req.file.path))
-			.replace('public', '')
-			.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
+		// const uploadedImagePath = path.resolve(req.file.path)
+		// const uploadedImage = path
+		// 	.join(path.dirname(req.file.path), path.basename(req.file.path))
+		// 	.replace('public', '')
+		// 	.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
 
-		const fileType = req.file.mimetype
+		// const fileType = req.file.mimetype
 
 		let createdUser
-		const { firstName, lastName, email, phoneNumber, password } = req.body
+		// const { firstName, lastName, email, phoneNumber, password } = req.body
 
 		try {
-			if (fileType.startsWith('image/') === false) {
-				deleteFile(uploadedImagePath)
-				return ErrorResponse(res, null, 'invalid upload file type')
-			}
+			// if (fileType.startsWith('image/') === false) {
+			// 	deleteFile(uploadedImagePath)
+			// 	return ErrorResponse(res, null, 'invalid upload file type')
+			// }
 
-			createdUser = await User.create({
-				firstName,
-				lastName,
-				email,
-				phoneNumber,
-				password,
-				image: uploadedImage,
-			})
+			// createdUser = await User.create({
+			// 	firstName,
+			// 	lastName,
+			// 	email,
+			// 	phoneNumber,
+			// 	password,
+			// 	image: uploadedImage,
+			// })
+			createdUser = await User.create(req.body)
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			deleteFile(uploadedImagePath)
+			// deleteFile(uploadedImagePath)
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
@@ -61,10 +63,7 @@ class UserController {
 
 		// selecting specific things to display to the user
 		let _createdUser = createdUser.toObject()
-		// TODO to be refractored, this is a messy way to handle it
-		delete _createdUser._id
 		delete _createdUser.__v
-		delete _createdUser.password
 
 		return SuccessResponse(res, _createdUser, 'user created', 201)
 	}
