@@ -24,11 +24,15 @@ const indexRouter = require('./routes/index.routes')
 const usersRouter = require('./routes/user.routes')
 const authRouter = require('./routes/auth.routes')
 const productsRouter = require('./routes/products.routes')
+const mainCategoriesRouter = require('./routes/main_categories.route')
+const subCategoriesRouter = require('./routes/sub_categories.route')
 
 app.use(API_VER, indexRouter)
 app.use(API_VER + '/users', usersRouter)
 app.use(API_VER + '/auth', authRouter)
 app.use(API_VER + '/products', productsRouter)
+app.use(API_VER + '/maincategories', mainCategoriesRouter)
+app.use(API_VER + '/subcategories', subCategoriesRouter)
 
 /* Start Express App */
 mongoose
