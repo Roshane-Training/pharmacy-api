@@ -3,8 +3,8 @@ const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
 const User = require('../models/user')
 const path = require('path')
 const fs = require('fs')
+const bcrypt = require('bcrypt')
 
-// const USER_SELECT_FILTER = '-password -__v'
 const USER_SELECT_FILTER = ''
 
 class UserController {
@@ -14,35 +14,34 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		// const uploadedImagePath = path.resolve(req.file.path)
-		// const uploadedImage = path
-		// 	.join(path.dirname(req.file.path), path.basename(req.file.path))
-		// 	.replace('public', '')
-		// 	.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
+		const uploadedImagePath = path.resolve(req.file.path)
+		const uploadedImage = path
+			.join(path.dirname(req.file.path), path.basename(req.file.path))
+			.replace('public', '')
+			.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
 
-		// const fileType = req.file.mimetype
+		const fileType = req.file.mimetype
 
 		let createdUser
-		// const { firstName, lastName, email, phoneNumber, password } = req.body
+		const { fullName, email, phoneNumber, password } = req.body
 
 		try {
-			// if (fileType.startsWith('image/') === false) {
-			// 	deleteFile(uploadedImagePath)
-			// 	return ErrorResponse(res, null, 'invalid upload file type')
-			// }
+			// file type validation
+			if (fileType.startsWith('image/') === false) {
+				deleteFile(uploadedImagePath)
+				return ErrorResponse(res, null, 'invalid upload file type')
+			}
 
-			// createdUser = await User.create({
-			// 	firstName,
-			// 	lastName,
-			// 	email,
-			// 	phoneNumber,
-			// 	password,
-			// 	image: uploadedImage,
-			// })
-			createdUser = await User.create(req.body)
+			createdUser = await User.create({
+				fullName,
+				email,
+				phoneNumber,
+				password,
+				image: uploadedImage,
+			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			// deleteFile(uploadedImagePath)
+			deleteFile(uploadedImagePath)
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
@@ -113,29 +112,38 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static updateOne = async (req, res) => {
-		const { email, role, password } = req.body
-		const { id: _id } = req.params
+		let { fullName, phoneNumber, email, password, role } = req.body
+		const { id } = req.params
 
-		if (!email && !role && !password)
-			return ErrorResponse(res, null, 'nothing sent to update', 200)
+		const isFieldsEmpty = Object.values(req.body).every(
+			(val) => val == '' || val == null
+		)
+
+		if (isFieldsEmpty) return ErrorResponse(res, null, 'nothing to update', 200)
 
 		let user
 
 		try {
-			user = await User.findOne({ _id })
+			user = await User.findOne({ id })
 		} catch (error) {
 			return ErrorResponse(res, error, 'error while trying to find user')
 		}
 
 		if (!user) return ErrorResponse(res, `no user found`)
 
-		const updatedUser = await User.updateOne(
-			{ _id },
-			{ email, password, role },
-			{ returnDocument: true, returnOriginal: true, new: true }
-		).catch((error) => {
+		password = bcrypt.hashSync(password, 10)
+
+		let updatedUser
+
+		try {
+			updatedUser = await User.updateOne(
+				{ id },
+				{ fullName, phoneNumber, email, role, password },
+				{ new: true }
+			)
+		} catch (error) {
 			return ErrorResponse(res, error, 'error updating user')
-		})
+		}
 
 		return SuccessResponse(res, updatedUser, 'user updated')
 	}
@@ -146,22 +154,28 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static deleteOne = async (req, res) => {
-		let user = await User.findByIdAndRemove(req.params.id, {
-			returnDocument: true,
-		}).catch((error) => {
+		let user
+
+		try {
+			user = await User.findByIdAndRemove(req.params.id, {
+				returnDocument: true,
+			})
+		} catch (error) {
 			return ErrorResponse(res, error, 'error deleting with user model')
-		})
+		}
 
 		if (!user) return ErrorResponse(res, null, 'user not found')
 
-		return SuccessResponse(res, user.email, 'user deleted')
+		return SuccessResponse(res, user, 'user deleted')
 	}
 }
 
+/**
+ * This functions deletes a file from the server storage using NodeJS `rmSync` function.
+ * @param {String} filePath File that will be deleted.
+ */
 function deleteFile(filePath) {
-	console.log(
-		`${path.basename(__filename)} :: User creation error deleting - ${filePath}`
-	)
+	console.log(`Deleted - ${filePath}`)
 
 	fs.rmSync(filePath)
 }

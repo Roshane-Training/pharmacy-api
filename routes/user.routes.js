@@ -9,11 +9,10 @@ router
 	.get(auth, UserController.getAll)
 	.post(Upload.single('image'), UserController.createOne)
 
-router.use(auth)
 router
 	.route('/:id')
 	.get(UserController.getOne)
-	.patch(UserController.updateOne)
-	.delete(UserController.deleteOne)
+	.patch(auth, UserController.updateOne)
+	.delete(auth, UserController.deleteOne)
 
 module.exports = router

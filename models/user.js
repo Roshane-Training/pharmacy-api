@@ -4,14 +4,12 @@ const Schema = mongoose.Schema
 
 const UserSchema = Schema({
 	fullName: { type: String, required: true },
-	// firstName: { type: String, required: true },
-	// lastName: { type: String, required: true },
-	// image: { type: String, required: true },
+	image: { type: String, required: true },
 	phoneNumber: {
 		type: String,
 		required: true,
 		validate: {
-			validator: (v) => /\d{3}-\d{3}-\d{4}/.test(v),
+			validator: (value) => /\d{3}-\d{3}-\d{4}/.test(value),
 			message: (props) =>
 				`${props.value} is not a valid phone number! Try using this pattern 000-000-0000`,
 		},
@@ -21,9 +19,9 @@ const UserSchema = Schema({
 		required: true,
 		unique: [true, 'this email is currently being used'],
 		validate: {
-			validator: (v) =>
+			validator: (value) =>
 				/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-					v
+					value
 				),
 			message: (props) => `${props.value} is not a valid email address!`,
 		},
@@ -31,7 +29,6 @@ const UserSchema = Schema({
 	password: { type: String, required: true },
 	role: {
 		type: String,
-		enum: ['customer', 'doctor', 'admin'],
 		required: true,
 		default: 'customer',
 	},
