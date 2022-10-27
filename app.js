@@ -22,11 +22,13 @@ app.use(cors([process.env.FRONTEND_URL, process.env.PRODUCTION ? undefined : '*'
 const { DevLog } = require('./lib/helpers')
 const indexRouter = require('./routes/index.routes')
 const usersRouter = require('./routes/user.routes')
+const doctorsRouter = require('./routes/doctor.routes')
 const authRouter = require('./routes/auth.routes')
 const productsRouter = require('./routes/products.routes')
 
 app.use(API_VER, indexRouter)
 app.use(API_VER + '/users', usersRouter)
+app.use(API_VER + '/doctors', doctorsRouter)
 app.use(API_VER + '/auth', authRouter)
 app.use(API_VER + '/products', productsRouter)
 
