@@ -20,16 +20,16 @@ const productSchema = new mongoose.Schema(
             required: true
         },
         rating: {
-            type: Array,
+            type: Number,
             required: false
         },
         main_categoryId: {
             type: Schema.Types.ObjectId, ref:"MainCategory",
-            required: true,
+            required: false,
         },
         sub_categoryId: {
             type: Schema.Types.ObjectId, ref:"SubCategory",
-            required: true,
+            required: false,
         }
     },
 

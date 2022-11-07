@@ -11,6 +11,7 @@ class ProductController {
 	 * @param {import("express").Response} res
      */
     static createOne = async (req, res) => {
+        console.log(req.file)
         const uploadedImagePath = path.resolve(req.file.path)
         const uploadedImage = path
             .join(path.dirname(req.file.path), path.basename(req.file.path))
