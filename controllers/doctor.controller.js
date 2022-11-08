@@ -2,8 +2,8 @@ require('dotenv/config')
 const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
 const Doctor = require('../models/doctor')
 const path = require('path')
-const fs = require('fs')
 const bcrypt = require('bcrypt')
+const { deleteFile } = require('../lib/helpers')
 
 const DOCTOR_SELECT_FILTER = ''
 
@@ -206,14 +206,6 @@ class DoctorController {
 	}
 }
 
-/**
- * This functions deletes a file from the server storage using NodeJS `rmSync` function.
- * @param {String} filePath File that will be deleted.
- */
-function deleteFile(filePath) {
-	console.log(`Deleted - ${filePath}`)
 
-	fs.rmSync(filePath)
-}
 
 module.exports = DoctorController
