@@ -1,4 +1,5 @@
 const express = require('express')
+const AuthController = require('../controllers/auth.controller')
 const router = express.Router()
 const DoctorController = require('../controllers/doctor.controller')
 const { auth } = require('../middlewares/auth')
@@ -8,6 +9,8 @@ router
 	.route('/')
 	.get(auth, DoctorController.getAll)
 	.post(Upload.single('image'), DoctorController.createOne)
+
+router.route('login').post(AuthController.loginDoctor)
 
 router
 	.route('/:id')
