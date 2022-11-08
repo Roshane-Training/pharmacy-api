@@ -10,6 +10,7 @@ class SubCategoryController {
      */
     static createOne = async (req, res) => {
         const createdSubcategory = await SubCategory.create(req.body).catch((error) => {
+
             ErrorResponse(res, 'error creating category', error, 500)
         })
 
@@ -23,7 +24,7 @@ class SubCategoryController {
 	 * @param {import("express").Response} res
      */
     static getAll = async (req, res) => {
-        const subcategories = await SubCategory.find().catch((error) => {
+        const subcategories = await SubCategory.find().populate("main_categoryId").catch((error) => {
             return ErrorResponse(res, 'error finding categories', error, 500)
         })
 

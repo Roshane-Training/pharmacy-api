@@ -9,7 +9,7 @@ const SubCategorySchema = new Schema(
             required: true,
         },
         main_categoryId: {
-            type: Schema.Types.ObjectId, ref:"MainCategory",
+            type: Schema.Types.ObjectId, ref:"main_categories",
             required: true,
         }
     },

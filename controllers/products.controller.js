@@ -24,6 +24,7 @@ class ProductController {
         let createdProduct
         const {
             name,
+            image,
             description,
             price,
             rating,
