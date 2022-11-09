@@ -10,7 +10,7 @@ router
 	.get(auth, DoctorController.getAll)
 	.post(Upload.single('image'), DoctorController.createOne)
 
-router.route('login').post(AuthController.loginDoctor)
+router.route('/login').post(AuthController.loginDoctor)
 
 router
 	.route('/:id')
