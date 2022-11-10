@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Doctor = require('../models/doctor')
 
 const { generateAccessToken, ErrorResponse, SuccessResponse } = require('../lib/helpers')
 
@@ -45,6 +46,50 @@ class AuthController {
 					user: _existingUser,
 				},
 				'login successful'
+			)
+		}
+	}
+
+	/**
+	 *
+	 * @param {import("express").Request} req
+	 * @param {import("express").Response} res
+	 */
+	static loginDoctor = async (req, res) => {
+		let { email, password } = req.body
+		let existingUser
+		let token
+
+		const unknownError = 'error! something went wrong on our end.'
+
+		existingUser = await Doctor.findOne({ email: email }).catch((error) => {
+			return ErrorResponse(res, unknownError, error)
+		})
+
+		if (!existingUser) {
+			return ErrorResponse(res, "we couldn't find your doctor account", null, 404)
+		}
+
+		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
+
+		if (isValidLogin === false) {
+			return ErrorResponse(res, null, 'invalid credentials')
+		} else {
+			token = generateAccessToken({
+				_id: existingUser.id,
+			})
+
+			//remove password before returning the response
+			const _existingUser = existingUser.toObject()
+			delete _existingUser.password
+
+			return SuccessResponse(
+				res,
+				{
+					token,
+					user: _existingUser,
+				},
+				'doctor login successful'
 			)
 		}
 	}

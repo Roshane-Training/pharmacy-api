@@ -2,6 +2,7 @@ const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
 const Product = require('../models/products')
 const path = require('path')
 const fs = require('fs')
+const { deleteFile } = require('../lib/helpers')
 
 class ProductController {
 
@@ -23,6 +24,7 @@ class ProductController {
         let createdProduct
         const {
             name,
+            image,
             description,
             price,
             rating,
