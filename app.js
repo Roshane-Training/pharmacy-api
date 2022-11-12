@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080
 const NAME = process.env.NAME || 'amberapp3'
 const API_VER = '/api/v1'
 
-const { swaggerDocs: V1SwaggerDocs } = require("./swagger")
+const { swaggerDocs: V1SwaggerDocs } = require('./swagger')
 
 /* Middlewares */
 // app.use(morgan('dev'))

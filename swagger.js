@@ -14,16 +14,55 @@ const options = {
             {
                 url: "http://localhost:8080/api/v1"
             }
-        ]
+        ],
+        components: {
+            schemas: {
+                User: {
+                    type: Object,
+                    properties: {
+                        id: {
+                            type: String,
+                            description:"Mongoose Object ID as a String",
+                            example: "63228ae60e8b432603389f39"
+                        },
+                        fullName: {
+                            type: String,
+                            description: "Name of the User",
+                            example: "Geovaunie Golding"
+                        },
+                        phoneNumber: {
+                            type: String,
+                            description: "Contact or Telephone Number of the User",
+                            example: "1234567890"
+                        },
+                        email: {
+                            type: String,
+                            description: "Email Address of the User",
+                            example: "geovauniegolding@mail.com"
+                        },
+                        password: {
+                            type: String,
+                            description: "Password created by the User",
+                            example: "1234$%1234"
+                        },
+                        role: {
+                            type: String,
+                            description: "The Account Type assigned to the User",
+                            example: "Customer"
+                        },
+                    }
+                }
+            }
+        }
     },
-    apis: [ "./routes/user.routes.js", "./routes/auth.routes.js", "./routes/doctor.routes.js", "./routes/products.routes.js", "./routes/main_categories.route.js", "./routes/sub_categories.route.js", "./SCHEMA/user.js", "./SCHEMA/doctor.js", "./SCHEMA/products.js", "./SCHEMA/main_categories.js", "./SCHEMA/sub_categories.js" ]
+    apis: [ "./routes/user.routes.js", "./routes/auth.routes.js", "./routes/doctor.routes.js", "./routes/products.routes.js", "./routes/main_categories.route.js", "./routes/sub_categories.route.js" ]
 }
 
 // Docs in JSON Format
 const swaggerSpec = swaggerJSDoc(options);
 
 // Serve Swagger Docs Function
-const swaggerDocs = ( app, PORT ) => {
+const swaggerDocs = ( app, port ) => {
     // route to the docs
     app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
@@ -33,7 +72,7 @@ const swaggerDocs = ( app, PORT ) => {
     })
 
     console.log(
-        `Version 1 Docs are available at http://localhost:${PORT}/api/v1/docs`
+        `Version 1 Docs are available on http://localhost:${port}/api/v1/docs`
     );
 }
 
