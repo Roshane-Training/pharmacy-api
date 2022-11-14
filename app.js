@@ -9,7 +9,6 @@ const morgan = require('morgan')
 
 const PORT = process.env.PORT || 8080
 const NAME = process.env.NAME || 'amberapp3'
-const API_VER = '/api/v1'
 
 const { swaggerDocs: V1SwaggerDocs } = require('./swagger')
 
@@ -29,6 +28,9 @@ const authRouter = require('./routes/auth.routes')
 const productsRouter = require('./routes/products.routes')
 const mainCategoriesRouter = require('./routes/main_categories.route')
 const subCategoriesRouter = require('./routes/sub_categories.route')
+
+// API Version
+const API_VER = '/api/v1'
 
 app.use(API_VER, indexRouter)
 app.use(API_VER + '/users', usersRouter)

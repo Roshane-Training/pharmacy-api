@@ -26,74 +26,7 @@ router
 	 *                                   example: Users found
 	 */
 	.get(auth, UserController.getAll)
-
-	/**
-	 * @openapi
-	 * /api/v1/users:
-	 *  post:
-	 *      summary: Create a New User Profile
-	 *      tags:
-	 *          - Users
-	 *      requestBody:
-	 *          description: Form data required to create a new user
-	 *          required: true
-	 *          content:
-	 *              application/json:
-	 *                  schema:
-	 *                      $ref: "#/components/schemas/User"
-	 *      responses:
-	 *          200:
-	 *              description: SUCCESS
-	 *              content:
-	 *                  application/json:
-	 *                      schema:
-	 *                          type: object
-	 *                          properties:
-	 *                              status:
-	 *                                  type: string
-	 *                                  example: User created
-	 *                              data:
-	 *                                  type: object
-	 *                                  properties:
-	 *                                      user:
-	 *                                           type: object
-	 *                                           $ref: "#/components/schemas/User"
-	 * 
-	 *          400:
-	 *              description: FAILED
-	 *              content:
-	 *                  application/json:
-	 *                      schema:
-	 *                          type: object
-	 *                          properties:
-	 *                              status:
-	 *                                  type: string
-	 *                                  example: 400
-	 *                              message:
-	 *                                  type: string
-	 *                                  example: Bad Request
-	 *                              error:
-	 *                                  type: string
-	 *                                  example: Error creating user
-	 * 
-	 *          5XX:
-	 *              description: FAILED
-	 *              content:
-	 *                  application/json:
-	 *                      schema:
-	 *                          type: object
-	 *                          properties:
-	 *                              status:
-	 *                                  type: string
-	 *                                  example: FAILED
-	 *                              data:
-	 *                                  type: object
-	 *                                  properties:
-	 *                                          error:
-	 *                                              type: string
-	 *                                              example: Server Error
-	 */
-	.post(Upload.single('image'), UserController.createOne)
+	.post(/*Upload.single('image'), */ UserController.createOne)
 
 router
 	.route('/:id')

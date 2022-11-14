@@ -15,34 +15,34 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const uploadedImagePath = path.resolve(req.file.path)
-		const uploadedImage = path
-			.join(path.dirname(req.file.path), path.basename(req.file.path))
-			.replace('public', '')
-			.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
+		// const uploadedImagePath = path.resolve(req.file.path)
+		// const uploadedImage = path
+		// 	.join(path.dirname(req.file.path), path.basename(req.file.path))
+		// 	.replace('public', '')
+		// 	.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
 
-		const fileType = req.file.mimetype
+		// const fileType = req.file.mimetype
 
 		let createdUser
 		const { fullName, email, phoneNumber, password } = req.body
 
 		try {
 			// file type validation
-			if (fileType.startsWith('image/') === false) {
-				deleteFile(uploadedImagePath)
-				return ErrorResponse(res, null, 'invalid upload file type')
-			}
+			// if (fileType.startsWith('image/') === false) {
+			// 	deleteFile(uploadedImagePath)
+			// 	return ErrorResponse(res, null, 'invalid upload file type')
+			// }
 
 			createdUser = await User.create({
 				fullName,
 				email,
 				phoneNumber,
 				password,
-				image: uploadedImage,
+				// image: uploadedImage,
 			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			deleteFile(uploadedImagePath)
+			// deleteFile(uploadedImagePath)
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
