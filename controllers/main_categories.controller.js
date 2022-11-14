@@ -10,10 +10,10 @@ class MainCategoryController {
      */
     static createOne = async (req, res) => {
         const createdMaincategory = await MainCategory.create(req.body).catch((error) => {
-            ErrorResponse(res, 'error creating category', error, 500)
+            ErrorResponse(res, 'error creating  main category', error, 500)
         })
 
-        SuccessResponse(res, 'category created', createdMaincategory, 201)
+        SuccessResponse(res, ' main category created', createdMaincategory, 201)
     }
 
 
@@ -24,13 +24,13 @@ class MainCategoryController {
      */
     static getAll = async (req, res) => {
         const maincategories = await MainCategory.find().catch((error) => {
-            return ErrorResponse(res, 'error finding categories', error, 500)
+            return ErrorResponse(res, 'error finding main categories', error, 500)
         })
 
         if (!maincategories || maincategories.lenght <= 0)
-            return SuccessResponse(res, 'there are no categories at the moment', maincategories)
+            return SuccessResponse(res, 'there are no main categories at the moment', maincategories)
         
-        return SuccessResponse(res, 'categories found', maincategories)
+        return SuccessResponse(res, 'main categories found', maincategories)
     }
 
 
@@ -41,12 +41,12 @@ class MainCategoryController {
      */
     static getOne = async (req, res) => {
         const maincategory = await MainCategory.findById(req.params.id).catch((error) => {
-            return ErrorResponse(res, 'error finding the category with model', error, 500)
+            return ErrorResponse(res, 'error finding the main category with model', error, 500)
         })
 
-        if (!maincategory) return SuccessResponse(res, 'category not found', maincategory)
+        if (!maincategory) return SuccessResponse(res, 'main category not found', maincategory)
 
-        return SuccessResponse(res, 'category found', maincategory)
+        return SuccessResponse(res, 'main category found', maincategory)
     }
 
 
@@ -63,20 +63,20 @@ class MainCategoryController {
             return ErrorResponse(res, 'no data sent for an update', null, 200)
 
         const maincategory = await MainCategory.findOne({ _id }).catch ((error) => {
-            return ErrorResponse(res, 'error while trying to find category', error, 500)
+            return ErrorResponse(res, 'error while trying to find main category', error, 500)
         })
 
-        if (!maincategory) return ErrorResponse(res, 'no category found')
+        if (!maincategory) return ErrorResponse(res, 'no main category found')
 
         const updatedMainCategory = await MainCategory.updateOne(
             { _id },
             { name },
             { returnDocument: true, returnOriginal: true, new: true }
         ).catch((error) => {
-            return ErrorResponse(res, 'error updating category', error, 500)
+            return ErrorResponse(res, 'error updating main category', error, 500)
         })
 
-        SuccessResponse(res, 'category updated', updatedMainCategory)
+        SuccessResponse(res, 'main category updated', updatedMainCategory)
     }
 
 
@@ -89,12 +89,12 @@ class MainCategoryController {
         let maincategory = await MainCategory.findByIdAndRemove(req.params.id, {
             returnDocument: true,
         }).catch((error) => {
-            ErrorResponse(res, 'error deleting category', error, 500)
+            ErrorResponse(res, 'error deleting main category', error, 500)
         })
 
-        if(!maincategory) return ErrorResponse(res, 'category not found for removal', null, 200)
+        if(!maincategory) return ErrorResponse(res, 'main category not found for removal', null, 200)
 
-        return SuccessResponse(res, 'category deleted', maincategory.name)
+        return SuccessResponse(res, 'main category deleted', maincategory.name)
     }
 }
 

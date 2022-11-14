@@ -11,10 +11,10 @@ class SubCategoryController {
     static createOne = async (req, res) => {
         const createdSubcategory = await SubCategory.create(req.body).catch((error) => {
 
-            ErrorResponse(res, 'error creating category', error, 500)
+            ErrorResponse(res, 'error creating sub category', error, 500)
         })
 
-        SuccessResponse(res, 'category created', createdSubcategory, 201)
+        SuccessResponse(res, 'sub category created', createdSubcategory, 201)
     }
 
 
@@ -25,13 +25,13 @@ class SubCategoryController {
      */
     static getAll = async (req, res) => {
         const subcategories = await SubCategory.find().populate("main_categoryId").catch((error) => {
-            return ErrorResponse(res, 'error finding categories', error, 500)
+            return ErrorResponse(res, 'error finding sub categories', error, 500)
         })
 
         if (!subcategories || subcategories.lenght <= 0)
-            return SuccessResponse(res, 'there are no categories at the moment', subcategories)
+            return SuccessResponse(res, 'there are no sub categories at the moment', subcategories)
         
-        return SuccessResponse(res, 'categories found', subcategories)
+        return SuccessResponse(res, 'sub categories found', subcategories)
     }
 
 
@@ -42,12 +42,12 @@ class SubCategoryController {
      */
     static getOne = async (req, res) => {
         const subcategory = await SubCategory.findById(req.params.id).catch((error) => {
-            return ErrorResponse(res, 'error finding the category with model', error, 500)
+            return ErrorResponse(res, 'error finding the sub category with model', error, 500)
         })
 
         if (!subcategory) return SuccessResponse(res, 'category not found', subcategory)
 
-        return SuccessResponse(res, 'category found', subcategory)
+        return SuccessResponse(res, 'sub category found', subcategory)
     }
 
 
@@ -65,10 +65,10 @@ class SubCategoryController {
             return ErrorResponse(res, 'no data sent for an update', null, 200)
 
         const subcategory = await SubCategory.findOne({ _id }).catch ((error) => {
-            return ErrorResponse(res, 'error while trying to find category', error, 500)
+            return ErrorResponse(res, 'error while trying to find sub category', error, 500)
         })
 
-        if (!subcategory) return ErrorResponse(res, 'no category found')
+        if (!subcategory) return ErrorResponse(res, 'no sub category found')
 
         const updatedSubCategory = await SubCategory.updateOne(
             { _id },
@@ -76,10 +76,10 @@ class SubCategoryController {
             { main_categoryId },
             { returnDocument: true, returnOriginal: true, new: true }
         ).catch((error) => {
-            return ErrorResponse(res, 'error updating category', error, 500)
+            return ErrorResponse(res, 'error updating sub category', error, 500)
         })
 
-        SuccessResponse(res, 'category updated', updatedSubCategory)
+        SuccessResponse(res, 'sub category updated', updatedSubCategory)
     }
 
 
@@ -92,12 +92,12 @@ class SubCategoryController {
         let subcategory = await SubCategory.findByIdAndRemove(req.params.id, {
             returnDocument: true,
         }).catch((error) => {
-            ErrorResponse(res, 'error deleting category', error, 500)
+            ErrorResponse(res, 'error deleting sub category', error, 500)
         })
 
-        if(!subcategory) return ErrorResponse(res, 'category not found for removal', null, 200)
+        if(!subcategory) return ErrorResponse(res, 'sub category not found for removal', null, 200)
 
-        return SuccessResponse(res, 'category deleted', subcategory.name)
+        return SuccessResponse(res, 'sub category deleted', subcategory.name)
     }
 }
 

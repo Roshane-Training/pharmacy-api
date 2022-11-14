@@ -10,6 +10,8 @@ const morgan = require('morgan')
 const PORT = process.env.PORT || 8080
 const NAME = process.env.NAME || 'amberapp3'
 
+const { swaggerDocs: V1SwaggerDocs } = require('./swagger')
+
 /* Middlewares */
 // app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public'), { redirect: true }))
@@ -50,8 +52,9 @@ mongoose
 				\r\t[*] Your Network: \x1b[4m\x1b[32m${`http://${ip.address()}`}:${PORT}/api/v1\x1b[0m\r
 				\r\t[*] MongoDB URI: ${process.env.MONGODB_URI}\r
 				\r\n==========================================================`
-			)
-		})
+			);
+			V1SwaggerDocs( app, PORT )
+		});
 	})
 	.catch((err) => {
 		console.log('[!] Failed to connect MongoDB')

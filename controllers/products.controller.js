@@ -88,7 +88,7 @@ class ProductController {
 
         if (!product) return SuccessResponse(res, 'product not found', product)
 
-        return SuccessResponse(res, 'category found', product)
+        return SuccessResponse(res, 'product found', product)
      }
 
 
