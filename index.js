@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080
 const NAME = process.env.NAME || 'amberapp3'
 
 /* Middlewares */
-// app.use(morgan('dev'))
+app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public'), { redirect: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
