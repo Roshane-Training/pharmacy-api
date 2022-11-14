@@ -13,7 +13,7 @@ const NAME = process.env.NAME || 'amberapp3'
 const { swaggerDocs: V1SwaggerDocs } = require('./swagger')
 
 /* Middlewares */
-// app.use(morgan('dev'))
+app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public'), { redirect: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
