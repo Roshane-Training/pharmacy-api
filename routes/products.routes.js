@@ -139,7 +139,7 @@ router
 	 *                                data:
 	 *                                   type: object
 	 *                                   properties:
-	 *                                         user:
+	 *                                         product:
 	 *                                              type: object
 	 *                                              $ref: "#/components/schemas/User" 
 	 * 
@@ -208,7 +208,7 @@ router
 	 *                                  data: 
 	 *                                     type: object
 	 *                                     properties:
-	 *                                           user:
+	 *                                           product:
 	 *                                                type: object
 	 *                                                $ref: "#/components/schemas/Product"
 	 * 
@@ -277,7 +277,7 @@ router
 	 *                                   data:
 	 *                                       type: object
 	 *                                       properties: 
-	 *                                             user:
+	 *                                             product:
 	 *                                                  type: object
 	 *                                                  $ref: "#/components/schemas/Product"
 	 *
