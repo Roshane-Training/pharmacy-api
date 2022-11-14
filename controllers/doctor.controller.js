@@ -2,7 +2,7 @@ require('dotenv/config')
 const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
 const Doctor = require('../models/doctor')
 const path = require('path')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { deleteFile } = require('../lib/helpers')
 
 const DOCTOR_SELECT_FILTER = ''
@@ -205,7 +205,5 @@ class DoctorController {
 		return SuccessResponse(res, doctor, 'doctor deleted')
 	}
 }
-
-
 
 module.exports = DoctorController
