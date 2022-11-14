@@ -7,7 +7,7 @@ const Upload = require('../middlewares/multer')
 router
 	.route('/')
 	.get(auth, UserController.getAll)
-	.post(Upload.single('image'), UserController.createOne)
+	.post(/*Upload.single('image'), */ UserController.createOne)
 
 router
 	.route('/:id')

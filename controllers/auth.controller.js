@@ -23,7 +23,7 @@ class AuthController {
 		})
 
 		if (!existingUser) {
-			return ErrorResponse(res, "we couldn't find your account", null, 404)
+			return ErrorResponse(res, null, "we couldn't find your account", 404)
 		}
 
 		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
@@ -67,7 +67,7 @@ class AuthController {
 		})
 
 		if (!existingUser) {
-			return ErrorResponse(res, "we couldn't find your doctor account", null, 404)
+			return ErrorResponse(res, null, "we couldn't find your doctor account", 404)
 		}
 
 		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
