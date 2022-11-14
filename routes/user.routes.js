@@ -41,7 +41,6 @@ router
 	 *              application/json:
 	 *                  schema:
 	 *                      $ref: "#/components/schemas/User"
-	 * 
 	 *      responses:
 	 *          200:
 	 *              description: SUCCESS

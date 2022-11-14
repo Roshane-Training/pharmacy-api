@@ -9,7 +9,7 @@ router.route('/login').post(AuthController.login)
  * @openapi
  * /api/v1/auth/:
  *  post:
- *      summary: This Authenticates a user
+ *      summary: This Authenticates a User
  *      tags:
  *          - Auth
  *      requestBody:
