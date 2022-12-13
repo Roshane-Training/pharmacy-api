@@ -16,102 +16,102 @@ const Upload = require('../middlewares/multer')
 // }).single('image')
 
 router
-    .route('/')
-     
-    /**
-     * @openapi
-     * /api/v1/products:
-     *  get:
-     *       tags:
-     *           - Products
-     *       responses:
-     *           200:
-     *               description: SUCCESS
-     *               content:
-     *                   application/json:
-     *                       schema:
-     *                           type: object
-     *                           properties:
-     *                               status:
-     *                                   type: string
-     *                                   example: Products found
-     * 
-     */
-    .get(ProductsController.getAll)
+	.route('/')
 
-    /**
-     * @openapi
-     * /api/v1/products:
-     *  post:
-     *      summary: Create a New Product
-     *      tags:
-     *          - Products
-     *      requestBody:
-     *          description: Form data required to create a new product
-     *          required: true
-     *          content:
-     *              application/json:
-     *                  schema:
-     *                      $ref: "#/components/schemas/Product"
-     *      responses:
-     *          200:
-     *              description: SUCCESS
-     *              content:
-     *                  application/json:
-     *                      schema:
-     *                          type: object
-     *                          properties:
-     *                              status:
-     *                                  type: string
-     *                                  example: Product created
-     *                              data:
-     *                                  type: object
-     *                                  properties:
-     *                                      product:
-     *                                              type: object
-     *                                              $ref: "#/components/schemas/Product"
-     * 
-     *          400:
-     *              description: FAILED
-     *              content:
-     *                  application/json:
-     *                      schema:
-     *                          type: object
-     *                          properties:
-     *                              status:
-     *                                  type: string
-     *                                  example: 400
-     *                              message:
-     *                                  type: string
-     *                                  example: Bad Request
-     *                              error:
-     *                                  type: string
-     *                                  example: Error creating product
-     * 
-     *          5XX:
-     *              description: FAILED
-     *              content:
-     *                  application/json:
-     *                      schema:
-     *                          type: object
-     *                          properties:
-     *                              status:
-     *                                  type: string
-     *                                  example: FAILED
-     *                              data:
-     *                                  type: object
-     *                                  properties:
-     *                                          error: 
-     *                                              type: string
-     *                                              example: Server Error 
-     *             
-     */
-    .post(Upload.single('image'), ProductsController.createOne)
+	/**
+	 * @openapi
+	 * /api/v1/products:
+	 *  get:
+	 *       tags:
+	 *           - Products
+	 *       responses:
+	 *           200:
+	 *               description: SUCCESS
+	 *               content:
+	 *                   application/json:
+	 *                       schema:
+	 *                           type: object
+	 *                           properties:
+	 *                               status:
+	 *                                   type: string
+	 *                                   example: Products found
+	 *
+	 */
+	.get(ProductsController.getAll)
+
+	/**
+	 * @openapi
+	 * /api/v1/products:
+	 *  post:
+	 *      summary: Create a New Product
+	 *      tags:
+	 *          - Products
+	 *      requestBody:
+	 *          description: Form data required to create a new product
+	 *          required: true
+	 *          content:
+	 *              application/json:
+	 *                  schema:
+	 *                      $ref: "#/components/schemas/Product"
+	 *      responses:
+	 *          200:
+	 *              description: SUCCESS
+	 *              content:
+	 *                  application/json:
+	 *                      schema:
+	 *                          type: object
+	 *                          properties:
+	 *                              status:
+	 *                                  type: string
+	 *                                  example: Product created
+	 *                              data:
+	 *                                  type: object
+	 *                                  properties:
+	 *                                      product:
+	 *                                              type: object
+	 *                                              $ref: "#/components/schemas/Product"
+	 *
+	 *          400:
+	 *              description: FAILED
+	 *              content:
+	 *                  application/json:
+	 *                      schema:
+	 *                          type: object
+	 *                          properties:
+	 *                              status:
+	 *                                  type: string
+	 *                                  example: 400
+	 *                              message:
+	 *                                  type: string
+	 *                                  example: Bad Request
+	 *                              error:
+	 *                                  type: string
+	 *                                  example: Error creating product
+	 *
+	 *          5XX:
+	 *              description: FAILED
+	 *              content:
+	 *                  application/json:
+	 *                      schema:
+	 *                          type: object
+	 *                          properties:
+	 *                              status:
+	 *                                  type: string
+	 *                                  example: FAILED
+	 *                              data:
+	 *                                  type: object
+	 *                                  properties:
+	 *                                          error:
+	 *                                              type: string
+	 *                                              example: Server Error
+	 *
+	 */
+	.post(Upload.single('image'), ProductsController.createOne)
 
 router
-    .route('/:id')
+	.route('/:id')
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/products/{id}:
 	 *  get:
@@ -135,14 +135,14 @@ router
 	 *                            properties:
 	 *                                status:
 	 *                                   type: string
-	 *                                   example: Product found 
+	 *                                   example: Product found
 	 *                                data:
 	 *                                   type: object
 	 *                                   properties:
 	 *                                         product:
 	 *                                              type: object
-	 *                                              $ref: "#/components/schemas/User" 
-	 * 
+	 *                                              $ref: "#/components/schemas/User"
+	 *
 	 *          400:
 	 *              description: FAILED
 	 *              content:
@@ -159,8 +159,8 @@ router
 	 *                              error:
 	 *                                  type: string
 	 *                                  example: Error finding product with model
-	 * 
-	 *          5XX: 
+	 *
+	 *          5XX:
 	 *              description: FAILED
 	 *              content:
 	 *                  appliction/json:
@@ -175,12 +175,12 @@ router
 	 *                                  properties:
 	 *                                          error:
 	 *                                              type: string
-	 *                                              example: Server Error   
-	 * 
+	 *                                              example: Server Error
+	 *
 	 */
-    .get(ProductsController.getOne)
+	.get(ProductsController.getOne)
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/products/{id}:
 	 *  patch:
@@ -205,13 +205,13 @@ router
 	 *                                  status:
 	 *                                     type: string
 	 *                                     example: Product updated
-	 *                                  data: 
+	 *                                  data:
 	 *                                     type: object
 	 *                                     properties:
 	 *                                           product:
 	 *                                                type: object
 	 *                                                $ref: "#/components/schemas/Product"
-	 * 
+	 *
 	 *            400:
 	 *                description: FAILED
 	 *                content:
@@ -228,7 +228,7 @@ router
 	 *                                error:
 	 *                                    type: string
 	 *                                    example: Error updating product
-	 * 
+	 *
 	 *            5XX:
 	 *                decription: FAILED
 	 *                content:
@@ -242,14 +242,14 @@ router
 	 *                                data:
 	 *                                    type: object
 	 *                                    properties:
-	 *                                            error: 
+	 *                                            error:
 	 *                                                type: string
 	 *                                                example: Server Error
-	 *                                   
+	 *
 	 */
-    .patch(ProductsController.updateOne)
+	.patch(ProductsController.updateOne)
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/products/{id}:
 	 *  delete:
@@ -276,7 +276,7 @@ router
 	 *                                       example: Product deleted
 	 *                                   data:
 	 *                                       type: object
-	 *                                       properties: 
+	 *                                       properties:
 	 *                                             product:
 	 *                                                  type: object
 	 *                                                  $ref: "#/components/schemas/Product"
@@ -285,7 +285,7 @@ router
 	 *                 description: FAILED
 	 *                 content:
 	 *                     application/json:
-	 *                         schema:  
+	 *                         schema:
 	 *                             type: object
 	 *                             properties:
 	 *                                 status:
@@ -297,7 +297,7 @@ router
 	 *                                 error:
 	 *                                     type: string
 	 *                                     example: Error deleting product
-	 * 
+	 *
 	 *             5XX:
 	 *                 descripton: FAILED
 	 *                 content:
@@ -314,8 +314,8 @@ router
 	 *                                             error:
 	 *                                                 type: string
 	 *                                                 example: Server Error
-	 *                        
+	 *
 	 */
-    .delete(ProductsController.deleteOne)
+	.delete(ProductsController.deleteOne)
 
-module.exports = router;
+module.exports = router

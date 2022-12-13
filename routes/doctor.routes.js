@@ -59,7 +59,7 @@ router
 	 *                                      doctor:
 	 *                                           type: object
 	 *                                           $ref: "#/components/schemas/Doctor"
-	 * 
+	 *
 	 *          400:
 	 *              description: FAILED
 	 *              content:
@@ -76,7 +76,7 @@ router
 	 *                              error:
 	 *                                  type: string
 	 *                                  example: Error creating doctor
-	 * 
+	 *
 	 *          5XX:
 	 *              description: FAILED
 	 *              content:
@@ -96,9 +96,7 @@ router
 	 */
 	.post(Upload.single('image'), DoctorController.createOne)
 
-router
-	.route('/login')
-	.post(AuthController.loginDoctor)
+router.route('/login').post(AuthController.loginDoctor)
 
 router
 	.route('/:id')
@@ -127,14 +125,14 @@ router
 	 *                            properties:
 	 *                                status:
 	 *                                   type: string
-	 *                                   example: Doctor found 
+	 *                                   example: Doctor found
 	 *                                data:
 	 *                                   type: object
 	 *                                   properties:
 	 *                                         doctor:
 	 *                                              type: object
-	 *                                              $ref: "#/components/schemas/Doctor" 
-	 * 
+	 *                                              $ref: "#/components/schemas/Doctor"
+	 *
 	 *          400:
 	 *              description: FAILED
 	 *              content:
@@ -151,8 +149,8 @@ router
 	 *                              error:
 	 *                                  type: string
 	 *                                  example: Error finding doctor with model
-	 * 
-	 *          5XX: 
+	 *
+	 *          5XX:
 	 *              description: FAILED
 	 *              content:
 	 *                  appliction/json:
@@ -167,8 +165,8 @@ router
 	 *                                  properties:
 	 *                                          error:
 	 *                                              type: string
-	 *                                              example: Server Error   
-	 * 
+	 *                                              example: Server Error
+	 *
 	 */
 	.get(DoctorController.getOne)
 
@@ -197,13 +195,13 @@ router
 	 *                                  status:
 	 *                                     type: string
 	 *                                     example: Doctor updated
-	 *                                  data: 
+	 *                                  data:
 	 *                                     type: object
 	 *                                     properties:
 	 *                                           doctor:
 	 *                                                type: object
 	 *                                                $ref: "#/components/schemas/Doctor"
-	 * 
+	 *
 	 *            400:
 	 *                description: FAILED
 	 *                content:
@@ -220,7 +218,7 @@ router
 	 *                                error:
 	 *                                    type: string
 	 *                                    example: Error updating doctor
-	 * 
+	 *
 	 *            5XX:
 	 *                decription: FAILED
 	 *                content:
@@ -234,10 +232,10 @@ router
 	 *                                data:
 	 *                                    type: object
 	 *                                    properties:
-	 *                                            error: 
+	 *                                            error:
 	 *                                                type: string
 	 *                                                example: Server Error
-	 *                                   
+	 *
 	 */
 	.patch(auth, DoctorController.updateOne)
 
@@ -268,7 +266,7 @@ router
 	 *                                       example: Doctor deleted
 	 *                                   data:
 	 *                                       type: object
-	 *                                       properties: 
+	 *                                       properties:
 	 *                                             doctor:
 	 *                                                  type: object
 	 *                                                  $ref: "#/components/schemas/Doctor"
@@ -277,7 +275,7 @@ router
 	 *                 description: FAILED
 	 *                 content:
 	 *                     application/json:
-	 *                         schema:  
+	 *                         schema:
 	 *                             type: object
 	 *                             properties:
 	 *                                 status:
@@ -289,7 +287,7 @@ router
 	 *                                 error:
 	 *                                     type: string
 	 *                                     example: Error deleting with doctor model
-	 * 
+	 *
 	 *             5XX:
 	 *                 descripton: FAILED
 	 *                 content:
@@ -306,7 +304,7 @@ router
 	 *                                             error:
 	 *                                                 type: string
 	 *                                                 example: Server Error
-	 *                        
+	 *
 	 */
 	.delete(auth, DoctorController.deleteOne)
 

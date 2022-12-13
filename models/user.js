@@ -1,10 +1,12 @@
+require('dotenv/config')
 const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
+const { parseImageUrl } = require('../lib/helpers')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
 	fullName: { type: String, required: true },
-	// image: { type: String, required: true },
+	image: { type: String, required: true },
 	phoneNumber: {
 		type: String,
 		required: true,
@@ -48,6 +50,28 @@ UserSchema.pre('save', async function (next) {
 	} else {
 		throw new Error('fatal error while running `users` pre save model middleware')
 	}
+})
+
+UserSchema.post('find', function (docs, next) {
+	// Checks if the request is a query? (not too sure to be honest)
+	if (this instanceof mongoose.Query) {
+		for (let doc of docs) {
+			parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
+		}
+	}
+
+	// Pass on the request if the parse works or not
+	next()
+})
+
+UserSchema.post('findOne', function (doc, next) {
+	// Checks if the request is a query? (not too sure to be honest)
+	if (this instanceof mongoose.Query) {
+		parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
+	}
+
+	// Pass on the request if the parse works or not
+	next()
 })
 
 module.exports = mongoose.model('users', UserSchema)
