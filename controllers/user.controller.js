@@ -1,5 +1,5 @@
 require('dotenv/config')
-const { ErrorResponse, SuccessResponse, deleteS3File } = require('../lib/helpers')
+const { ErrorResponse, SuccessResponse, S3Helper } = require('../lib/helpers')
 const User = require('../models/user')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
@@ -25,7 +25,7 @@ class UserController {
 		try {
 			// file type validation
 			if (fileType.startsWith('image/') === false) {
-				deleteS3File(uploadedImageKey)
+				S3Helper.delete(uploadedImageKey)
 				return ErrorResponse(res, null, 'invalid upload file type')
 			}
 
@@ -38,7 +38,7 @@ class UserController {
 			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			deleteS3File(uploadedImageKey)
+			S3Helper.delete(uploadedImageKey)
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
@@ -164,16 +164,6 @@ class UserController {
 
 		return SuccessResponse(res, user, 'user deleted')
 	}
-}
-
-/**
- * This functions deletes a file from the server storage using NodeJS `rmSync` function.
- * @param {String} filePath File that will be deleted.
- */
-function deleteFile(filePath) {
-	console.log(`Deleted - ${filePath}`)
-
-	fs.rmSync(filePath)
 }
 
 module.exports = UserController
