@@ -1,9 +1,5 @@
-const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
+const { SuccessResponse, ErrorResponse, S3Helper } = require('../lib/helpers')
 const Product = require('../models/products')
-const path = require('path')
-const fs = require('fs')
-const { deleteS3File } = require('../lib/helpers')
-const S3Helper = require('../lib/s3Helper')
 
 class ProductController {
 	/**
@@ -25,6 +21,7 @@ class ProductController {
 		try {
 			//file type validation
 			if (fileType.startsWith('image/') === false) {
+				S3Helper.delete(uploadedImageKey)
 				return ErrorResponse(res, null, 'invalid upload file type')
 			}
 
@@ -39,7 +36,7 @@ class ProductController {
 			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			deleteS3File(uploadedImageKey)
+			S3Helper.delete(uploadedImageKey)
 
 			return ErrorResponse(res, 'error creating product', error, 500)
 		}

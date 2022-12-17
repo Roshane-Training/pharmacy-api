@@ -36,6 +36,7 @@ class DoctorController {
 		try {
 			// file type validation
 			if (fileType.startsWith('image/') === false) {
+				S3Helper.delete(uploadedImageKey)
 				return ErrorResponse(res, null, 'invalid upload file type')
 			}
 
@@ -53,7 +54,7 @@ class DoctorController {
 			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			deleteS3File(uploadedImageKey)
+			S3Helper.delete(uploadedImageKey)
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
