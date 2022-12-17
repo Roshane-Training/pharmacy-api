@@ -2,7 +2,8 @@ const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
 const Product = require('../models/products')
 const path = require('path')
 const fs = require('fs')
-const { deleteFile } = require('../lib/helpers')
+const { deleteS3File } = require('../lib/helpers')
+const S3Helper = require('../lib/s3Helper')
 
 class ProductController {
 	/**
@@ -11,11 +12,9 @@ class ProductController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const uploadedImagePath = path.resolve(req.file.path)
-		const uploadedImage = path
-			.join(path.dirname(req.file.path), path.basename(req.file.path))
-			.replace('public', '')
-			.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
+		if (!req.file) return ErrorResponse(res, 'please select an image', 400)
+
+		const uploadedImageKey = await S3Helper.upload(req.file, Date.now().toString())
 
 		const fileType = req.file.mimetype
 
@@ -26,13 +25,12 @@ class ProductController {
 		try {
 			//file type validation
 			if (fileType.startsWith('image/') === false) {
-				deleteFile(uploadedImagePath)
 				return ErrorResponse(res, null, 'invalid upload file type')
 			}
 
 			createdProduct = await Product.create({
 				name,
-				image: uploadedImage,
+				image: uploadedImageKey.key,
 				description,
 				price,
 				rating,
@@ -41,7 +39,7 @@ class ProductController {
 			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			deleteFile(uploadedImagePath)
+			deleteS3File(uploadedImageKey)
 
 			return ErrorResponse(res, 'error creating product', error, 500)
 		}
@@ -55,9 +53,13 @@ class ProductController {
 	 * @param {import("express").Response} res
 	 */
 	static getAll = async (req, res) => {
-		const products = await Product.find().catch((error) => {
+		let products
+		try {
+			products = await Product.find()
+		} catch (error) {
+			console.log(error)
 			return ErrorResponse(res, 'error finding products', error, 500)
-		})
+		}
 
 		if (!products || products.lenght <= 0)
 			return SuccessResponse(res, 'there are no products at this time', products)

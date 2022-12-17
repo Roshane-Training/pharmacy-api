@@ -26,7 +26,7 @@ router
 	 *                                   example: Users found
 	 */
 	.get(auth, UserController.getAll)
-	.post(/*Upload.single('image'), */ UserController.createOne)
+	.post(Upload.single('image'), UserController.createOne)
 
 router
 	.route('/:id')
@@ -55,14 +55,14 @@ router
 	 *                            properties:
 	 *                                status:
 	 *                                   type: string
-	 *                                   example: User found 
+	 *                                   example: User found
 	 *                                data:
 	 *                                   type: object
 	 *                                   properties:
 	 *                                         user:
 	 *                                              type: object
-	 *                                              $ref: "#/components/schemas/User" 
-	 * 
+	 *                                              $ref: "#/components/schemas/User"
+	 *
 	 *          400:
 	 *              description: FAILED
 	 *              content:
@@ -79,8 +79,8 @@ router
 	 *                              error:
 	 *                                  type: string
 	 *                                  example: Error finding user with model
-	 * 
-	 *          5XX: 
+	 *
+	 *          5XX:
 	 *              description: FAILED
 	 *              content:
 	 *                  appliction/json:
@@ -95,8 +95,8 @@ router
 	 *                                  properties:
 	 *                                          error:
 	 *                                              type: string
-	 *                                              example: Server Error   
-	 * 
+	 *                                              example: Server Error
+	 *
 	 */
 	.get(UserController.getOne)
 
@@ -125,13 +125,13 @@ router
 	 *                                  status:
 	 *                                     type: string
 	 *                                     example: User updated
-	 *                                  data: 
+	 *                                  data:
 	 *                                     type: object
 	 *                                     properties:
 	 *                                           user:
 	 *                                                type: object
 	 *                                                $ref: "#/components/schemas/User"
-	 * 
+	 *
 	 *            400:
 	 *                description: FAILED
 	 *                content:
@@ -148,7 +148,7 @@ router
 	 *                                error:
 	 *                                    type: string
 	 *                                    example: Error updating user
-	 * 
+	 *
 	 *            5XX:
 	 *                decription: FAILED
 	 *                content:
@@ -162,10 +162,10 @@ router
 	 *                                data:
 	 *                                    type: object
 	 *                                    properties:
-	 *                                            error: 
+	 *                                            error:
 	 *                                                type: string
 	 *                                                example: Server Error
-	 *                                   
+	 *
 	 */
 	.patch(auth, UserController.updateOne)
 
@@ -196,7 +196,7 @@ router
 	 *                                       example: User deleted
 	 *                                   data:
 	 *                                       type: object
-	 *                                       properties: 
+	 *                                       properties:
 	 *                                             user:
 	 *                                                  type: object
 	 *                                                  $ref: "#/components/schemas/User"
@@ -205,7 +205,7 @@ router
 	 *                 description: FAILED
 	 *                 content:
 	 *                     application/json:
-	 *                         schema:  
+	 *                         schema:
 	 *                             type: object
 	 *                             properties:
 	 *                                 status:
@@ -217,7 +217,7 @@ router
 	 *                                 error:
 	 *                                     type: string
 	 *                                     example: Error deleting with user model
-	 * 
+	 *
 	 *             5XX:
 	 *                 descripton: FAILED
 	 *                 content:
@@ -234,7 +234,7 @@ router
 	 *                                             error:
 	 *                                                 type: string
 	 *                                                 example: Server Error
-	 *                        
+	 *
 	 */
 	.delete(auth, UserController.deleteOne)
 

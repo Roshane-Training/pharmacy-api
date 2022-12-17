@@ -1,7 +1,6 @@
 require('dotenv/config')
-const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
+const { ErrorResponse, SuccessResponse, deleteS3File } = require('../lib/helpers')
 const User = require('../models/user')
-const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 
@@ -14,40 +13,37 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		// const uploadedImagePath = path.resolve(req.file.path)
-		// const uploadedImage = path
-		// 	.join(path.dirname(req.file.path), path.basename(req.file.path))
-		// 	.replace('public', '')
-		// 	.replaceAll('\\', '/') // image/CURRENT_TIME_original_file_name.jpg
+		if (!req.file) return ErrorResponse(res, 'please select an image', 400)
 
-		// const fileType = req.file.mimetype
+		const uploadedImageKey = await S3Helper.upload(req.file, Date.now().toString())
+
+		const fileType = req.file.mimetype
 
 		let createdUser
 		const { fullName, email, phoneNumber, password } = req.body
 
 		try {
 			// file type validation
-			// if (fileType.startsWith('image/') === false) {
-			// 	deleteFile(uploadedImagePath)
-			// 	return ErrorResponse(res, null, 'invalid upload file type')
-			// }
+			if (fileType.startsWith('image/') === false) {
+				deleteS3File(uploadedImageKey)
+				return ErrorResponse(res, null, 'invalid upload file type')
+			}
 
 			createdUser = await User.create({
 				fullName,
 				email,
 				phoneNumber,
 				password,
-				// image: uploadedImage,
+				image: uploadedImageKey.key,
 			})
 		} catch (error) {
 			// delete uploaded image by multer if there's an error in creation
-			// deleteFile(uploadedImagePath)
+			deleteS3File(uploadedImageKey)
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
 
 			let errors = []
-			let duplicateEmail = ''
 
 			// this handles common errors
 			errors = message.replace('users validation failed: ', '').split(', ')

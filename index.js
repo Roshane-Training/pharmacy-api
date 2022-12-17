@@ -28,6 +28,7 @@ const authRouter = require('./routes/auth.routes')
 const productsRouter = require('./routes/products.routes')
 const mainCategoriesRouter = require('./routes/main_categories.route')
 const subCategoriesRouter = require('./routes/sub_categories.route')
+const assetRouter = require('./routes/asset.routes')
 
 // API Version
 const API_VER = '/api/v1'
@@ -39,6 +40,7 @@ app.use(API_VER + '/auth', authRouter)
 app.use(API_VER + '/products', productsRouter)
 app.use(API_VER + '/maincategories', mainCategoriesRouter)
 app.use(API_VER + '/subcategories', subCategoriesRouter)
+app.use(API_VER + '/assets', assetRouter)
 
 /* Start Express App */
 mongoose
@@ -52,9 +54,9 @@ mongoose
 				\r\t[*] Your Network: \x1b[4m\x1b[32m${`http://${ip.address()}`}:${PORT}/api/v1\x1b[0m\r
 				\r\t[*] MongoDB URI: ${process.env.MONGODB_URI}\r
 				\r\n==========================================================`
-			);
-			V1SwaggerDocs( app, PORT )
-		});
+			)
+			V1SwaggerDocs(app, PORT)
+		})
 	})
 	.catch((err) => {
 		console.log('[!] Failed to connect MongoDB')
