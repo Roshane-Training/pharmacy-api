@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const MainCategoriesController = require('../controllers/main_categories.controller')
+const CategoriesController = require('../controllers/categories.controller')
 
 router
-    .route('/')
+	.route('/')
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/maincategories:
 	 *  get:
@@ -21,25 +21,25 @@ router
 	 *                           properties:
 	 *                               status:
 	 *                                   type: string
-	 *                                   example: Main Category found
-     * 
+	 *                                   example: Category found
+	 *
 	 */
-    .get(MainCategoriesController.getAll)
+	.get(CategoriesController.getAll)
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/maincategories:
 	 *  post:
-	 *      summary: Create a New Main Category
+	 *      summary: Create a New Category
 	 *      tags:
 	 *          - MainCategories
 	 *      requestBody:
-	 *          description: Form data required to create a new main category
+	 *          description: Form data required to create a new category
 	 *          required: true
 	 *          content:
 	 *              application/json:
 	 *                  schema:
-	 *                      $ref: "#/components/schemas/MainCategory"
+	 *                      $ref: "#/components/schemas/Category"
 	 *      responses:
 	 *          200:
 	 *              description: SUCCESS
@@ -50,14 +50,14 @@ router
 	 *                          properties:
 	 *                              status:
 	 *                                  type: string
-	 *                                  example: Main Category created
+	 *                                  example: Category created
 	 *                              data:
 	 *                                  type: object
 	 *                                  properties:
-	 *                                      maincategory:
+	 *                                      category:
 	 *                                           type: object
-	 *                                           $ref: "#/components/schemas/MainCategory"
-	 * 
+	 *                                           $ref: "#/components/schemas/Category"
+	 *
 	 *          400:
 	 *              description: FAILED
 	 *              content:
@@ -73,8 +73,8 @@ router
 	 *                                  example: Bad Request
 	 *                              error:
 	 *                                  type: string
-	 *                                  example: Error creating main category
-	 * 
+	 *                                  example: Error creating category
+	 *
 	 *          5XX:
 	 *              description: FAILED
 	 *              content:
@@ -91,27 +91,27 @@ router
 	 *                                          error:
 	 *                                              type: string
 	 *                                              example: Server Error
-     * 
+	 *
 	 */
-    .post(MainCategoriesController.createOne)
+	.post(CategoriesController.createOne)
 
 router
-    .route('/:id')
+	.route('/:id')
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/maincategories/{id}:
 	 *  get:
-	 *      summary: Retrieves a Main Category
+	 *      summary: Retrieves a Category
 	 *      tags:
 	 *          - MainCategories
 	 *      requestBody:
-	 *          description: Form data that selects and gives access to a main category
+	 *          description: Form data that selects and gives access to a category
 	 *          required: true
 	 *          content:
 	 *                application/json:
 	 *                  schema:
-	 *                      $ref: "#/components/schemas/MainCategory"
+	 *                      $ref: "#/components/schemas/Category"
 	 *      responses:
 	 *          200:
 	 *              description: SUCCESS
@@ -122,14 +122,14 @@ router
 	 *                            properties:
 	 *                                status:
 	 *                                   type: string
-	 *                                   example: Main Category found 
+	 *                                   example: Category found
 	 *                                data:
 	 *                                   type: object
 	 *                                   properties:
-	 *                                         maincategory:
+	 *                                         category:
 	 *                                              type: object
-	 *                                              $ref: "#/components/schemas/MainCategory" 
-	 * 
+	 *                                              $ref: "#/components/schemas/Category"
+	 *
 	 *          400:
 	 *              description: FAILED
 	 *              content:
@@ -145,9 +145,9 @@ router
 	 *                                  example: Bad Request
 	 *                              error:
 	 *                                  type: string
-	 *                                  example: Error finding main category with model
-	 * 
-	 *          5XX: 
+	 *                                  example: Error finding category with model
+	 *
+	 *          5XX:
 	 *              description: FAILED
 	 *              content:
 	 *                  appliction/json:
@@ -162,25 +162,25 @@ router
 	 *                                  properties:
 	 *                                          error:
 	 *                                              type: string
-	 *                                              example: Server Error   
-	 * 
+	 *                                              example: Server Error
+	 *
 	 */
-    .get(MainCategoriesController.getOne)
+	.get(CategoriesController.getOne)
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/maincategories/{id}:
 	 *  patch:
-	 *        summary: Updates a Main Category
+	 *        summary: Updates a Category
 	 *        tags:
 	 *            - MainCategories
 	 *        requestBody:
-	 *            description: Form data required to update a main category
+	 *            description: Form data required to update a category
 	 *            required: true
 	 *            content:
 	 *                  application/json:
 	 *                    schema:
-	 *                        $ref: "#/components/schemas/MainCategory"
+	 *                        $ref: "#/components/schemas/Category"
 	 *        responses:
 	 *            200:
 	 *                description: SUCCESS
@@ -191,14 +191,14 @@ router
 	 *                              properties:
 	 *                                  status:
 	 *                                     type: string
-	 *                                     example: Main Category updated
-	 *                                  data: 
+	 *                                     example: Category updated
+	 *                                  data:
 	 *                                     type: object
 	 *                                     properties:
-	 *                                           maincategory:
+	 *                                           category:
 	 *                                                type: object
-	 *                                                $ref: "#/components/schemas/MainCategory"
-	 * 
+	 *                                                $ref: "#/components/schemas/Category"
+	 *
 	 *            400:
 	 *                description: FAILED
 	 *                content:
@@ -214,8 +214,8 @@ router
 	 *                                    example: Bad Request
 	 *                                error:
 	 *                                    type: string
-	 *                                    example: Error updating main category
-	 * 
+	 *                                    example: Error updating category
+	 *
 	 *            5XX:
 	 *                decription: FAILED
 	 *                content:
@@ -229,27 +229,27 @@ router
 	 *                                data:
 	 *                                    type: object
 	 *                                    properties:
-	 *                                            error: 
+	 *                                            error:
 	 *                                                type: string
 	 *                                                example: Server Error
-	 *                                   
+	 *
 	 */
-    .patch(MainCategoriesController.updateOne)
+	.patch(CategoriesController.updateOne)
 
-    /**
+	/**
 	 * @openapi
 	 * /api/v1/maincategories/{id}:
 	 *  delete:
-	 *         summary: Deletes a Main Category
+	 *         summary: Deletes a Category
 	 *         tags:
 	 *             - MainCategories
 	 *         requestBody:
-	 *             description: Form data that is required to select a main category for deletion
+	 *             description: Form data that is required to select a category for deletion
 	 *             required: true
 	 *             content:
 	 *                   application/json:
 	 *                     schema:
-	 *                         $ref: "#/components/schemas/MainCategory"
+	 *                         $ref: "#/components/schemas/Category"
 	 *         responses:
 	 *             200:
 	 *                 description: SUCCESS
@@ -260,19 +260,19 @@ router
 	 *                               properties:
 	 *                                   status:
 	 *                                       type: string
-	 *                                       example: Main Category deleted
+	 *                                       example: Category deleted
 	 *                                   data:
 	 *                                       type: object
-	 *                                       properties: 
-	 *                                             maincategory:
+	 *                                       properties:
+	 *                                             category:
 	 *                                                  type: object
-	 *                                                  $ref: "#/components/schemas/MainCategory"
+	 *                                                  $ref: "#/components/schemas/Category"
 	 *
 	 *             400:
 	 *                 description: FAILED
 	 *                 content:
 	 *                     application/json:
-	 *                         schema:  
+	 *                         schema:
 	 *                             type: object
 	 *                             properties:
 	 *                                 status:
@@ -283,8 +283,8 @@ router
 	 *                                     example: Bad Request
 	 *                                 error:
 	 *                                     type: string
-	 *                                     example: Error deleting main category
-	 * 
+	 *                                     example: Error deleting category
+	 *
 	 *             5XX:
 	 *                 descripton: FAILED
 	 *                 content:
@@ -301,8 +301,8 @@ router
 	 *                                             error:
 	 *                                                 type: string
 	 *                                                 example: Server Error
-	 *                        
+	 *
 	 */
-    .delete(MainCategoriesController.deleteOne)
+	.delete(CategoriesController.deleteOne)
 
 module.exports = router

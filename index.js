@@ -26,8 +26,8 @@ const usersRouter = require('./routes/user.routes')
 const doctorsRouter = require('./routes/doctor.routes')
 const authRouter = require('./routes/auth.routes')
 const productsRouter = require('./routes/products.routes')
-const mainCategoriesRouter = require('./routes/main_categories.route')
-const subCategoriesRouter = require('./routes/sub_categories.route')
+const categoriesRouter = require('./routes/categories.routes')
+// const subCategoriesRouter = require('./routes/sub_categories.route')
 const assetRouter = require('./routes/asset.routes')
 
 // API Version
@@ -38,8 +38,8 @@ app.use(API_VER + '/users', usersRouter)
 app.use(API_VER + '/doctors', doctorsRouter)
 app.use(API_VER + '/auth', authRouter)
 app.use(API_VER + '/products', productsRouter)
-app.use(API_VER + '/maincategories', mainCategoriesRouter)
-app.use(API_VER + '/subcategories', subCategoriesRouter)
+app.use(API_VER + '/categories', categoriesRouter)
+// app.use(API_VER + '/subcategories', subCategoriesRouter)
 app.use(API_VER + '/assets', assetRouter)
 
 /* Start Express App */
