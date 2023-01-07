@@ -1,5 +1,6 @@
 const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
 const S3Helper = require('../lib/s3Helper')
+const Product = require('../models/products')
 
 class AssetController {
 	/**
@@ -7,23 +8,22 @@ class AssetController {
 	 * @param {import('express').Request} req
 	 * @param {import('express').Response} res
 	 * @param {import('express').NextFunction} next
+	 * @param {import('mongoose').Model} model
 	 */
-	static async getImage(req, res, next) {
-		const { s3ID } = req.params
+	static async getImage(req, res, next, model) {
+		const { id } = req.params
+		let document
 
-		let file = await S3Helper.download(s3ID).catch((err) => {
-			console.error(err)
-			return ErrorResponse(res, 'Failed to get asset from our cloud storage')
-		})
-
-		if (file) {
-			const base64Image = Buffer.from(file.Body).toString('base64')
-			const defaultMimeType = `image/jpg`
-
-			res.send(`<img src="data:${defaultMimeType};base64,${base64Image}" />`)
-		} else {
-			return ErrorResponse(res, 'This file was not found', null, 404)
+		try {
+			document = await model.findOne({ _id: id })
+		} catch (error) {
+			console.log('Model Find Error', error)
 		}
+
+		if (document == null) return ErrorResponse(req, res, 'image not found', null, 404)
+
+		res.set('content-type', document.image.contentType)
+		return res.send(document.image.data)
 	}
 
 	/**

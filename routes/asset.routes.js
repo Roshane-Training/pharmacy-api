@@ -4,7 +4,7 @@ const AssetController = require('../controllers/asset.controller.js')
 const { auth } = require('../middlewares/auth.js')
 
 router
-	.route('/images/:s3ID')
+	.route('/images/:id')
 	.get(AssetController.getImage)
 	.delete(auth, AssetController.deleteImage)
 

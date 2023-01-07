@@ -1,7 +1,10 @@
+const { Router } = require('express')
 const express = require('express')
+const AssetController = require('../controllers/asset.controller')
 const router = express.Router()
 const ProductsController = require('../controllers/products.controller')
 const Upload = require('../middlewares/multer')
+const Product = require('../models/products')
 
 // //Getting Image
 // //storage
@@ -14,6 +17,10 @@ const Upload = require('../middlewares/multer')
 // const upload = multer({
 //     storage: Storage,
 // }).single('image')
+
+router.route('/image/:id').get((req, res, next) => {
+	return AssetController.getImage(req, res, next, Product)
+})
 
 router
 	.route('/')
