@@ -29,6 +29,16 @@ const productsRouter = require('./routes/products.routes')
 const categoriesRouter = require('./routes/categories.routes')
 // const subCategoriesRouter = require('./routes/sub_categories.route')
 const assetRouter = require('./routes/asset.routes')
+//
+//
+//
+const products = require('./models/products')
+const categories = require('./models/categories')
+const doctor = require('./models/doctor')
+const user = require('./models/user')
+//
+//
+//
 
 // API Version
 const API_VER = '/api/v1'

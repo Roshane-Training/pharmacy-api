@@ -14,7 +14,7 @@ class DoctorController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		if (!req.file) return ErrorResponse(res, 'please select an image', 400)
+		if (!req.file) return ErrorResponse(req, res, 'please select an image', 400)
 
 		const maximum_file_szie = 563_200 // 550 Kilobytes (KB)
 		const fileType = req.file.mimetype
@@ -35,7 +35,7 @@ class DoctorController {
 		try {
 			// file type validation
 			if (fileType.startsWith('image/') === false) {
-				return ErrorResponse(res, null, 'invalid upload file type')
+				return ErrorResponse(req, res, null, 'invalid upload file type')
 			}
 
 			//Check if the file size is larger than 500000 bytes(0.5MB)
@@ -77,17 +77,17 @@ class DoctorController {
 			// this handles duplicated email
 			if (error.code == E11000 && error.keyValue.email) {
 				respMessage = `'${error.keyValue.email}' is being used`
-				return ErrorResponse(res, [], respMessage, 400)
+				return ErrorResponse(req, res, [], respMessage, 400)
 			}
 
-			return ErrorResponse(res, errors, 'error creating doctor', 400)
+			return ErrorResponse(req, res, errors, 'error creating doctor', 400)
 		}
 
 		// selecting specific things to display to the doctor
 		let _createdDoctor = createdDoctor.toObject()
 		delete _createdDoctor.__v
 
-		return SuccessResponse(res, _createdDoctor, 'doctor created', 201)
+		return SuccessResponse(req, res, _createdDoctor, 'doctor created', 201)
 	}
 
 	/**
@@ -101,13 +101,13 @@ class DoctorController {
 		try {
 			doctors = await Doctor.find().select(DOCTOR_SELECT_FILTER)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error finding doctors with model')
+			return ErrorResponse(req, res, error, 'error finding doctors with model')
 		}
 
 		if (!doctors || doctors.length <= 0)
-			return SuccessResponse(res, doctors, 'doctors are empty at the moment')
+			return SuccessResponse(req, res, doctors, 'doctors are empty at the moment')
 
-		return SuccessResponse(res, doctors, 'doctors found')
+		return SuccessResponse(req, res, doctors, 'doctors found')
 	}
 
 	/**
@@ -121,12 +121,12 @@ class DoctorController {
 		try {
 			doctor = await Doctor.findById(req.params.id).select(DOCTOR_SELECT_FILTER)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error finding doctor with model')
+			return ErrorResponse(req, res, error, 'error finding doctor with model')
 		}
 
-		if (!doctor) return SuccessResponse(res, doctor, 'doctor not found')
+		if (!doctor) return SuccessResponse(req, res, doctor, 'doctor not found')
 
-		return SuccessResponse(res, doctor, 'doctor found')
+		return SuccessResponse(req, res, doctor, 'doctor found')
 	}
 
 	/**
@@ -153,17 +153,17 @@ class DoctorController {
 			(val) => val == '' || val == null
 		)
 
-		if (isFieldsEmpty) return ErrorResponse(res, null, 'nothing to update', 200)
+		if (isFieldsEmpty) return ErrorResponse(req, res, null, 'nothing to update', 200)
 
 		let doctor
 
 		try {
 			doctor = await Doctor.findOne({ id })
 		} catch (error) {
-			return ErrorResponse(res, error, 'error while trying to find doctor')
+			return ErrorResponse(req, res, error, 'error while trying to find doctor')
 		}
 
-		if (!doctor) return ErrorResponse(res, `no doctor found`)
+		if (!doctor) return ErrorResponse(req, res, `no doctor found`)
 
 		password = bcrypt.hashSync(password, 10)
 
@@ -187,10 +187,10 @@ class DoctorController {
 				{ new: true }
 			)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error updating doctor')
+			return ErrorResponse(req, res, error, 'error updating doctor')
 		}
 
-		return SuccessResponse(res, updatedDoctor, 'doctor updated')
+		return SuccessResponse(req, res, updatedDoctor, 'doctor updated')
 	}
 
 	/**
@@ -206,12 +206,12 @@ class DoctorController {
 				returnDocument: true,
 			})
 		} catch (error) {
-			return ErrorResponse(res, error, 'error deleting with doctor model')
+			return ErrorResponse(req, res, error, 'error deleting with doctor model')
 		}
 
-		if (!doctor) return ErrorResponse(res, null, 'doctor not found')
+		if (!doctor) return ErrorResponse(req, res, null, 'doctor not found')
 
-		return SuccessResponse(res, doctor, 'doctor deleted')
+		return SuccessResponse(req, res, doctor, 'doctor deleted')
 	}
 }
 

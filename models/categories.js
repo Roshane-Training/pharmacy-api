@@ -7,6 +7,10 @@ const CategorySchema = new Schema(
 			type: String,
 			required: true,
 		},
+		image: {
+			data: Buffer,
+			contentType: String,
+		},
 	},
 
 	{ timestamps: true, collection: 'categories' }

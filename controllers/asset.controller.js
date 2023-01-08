@@ -38,10 +38,10 @@ class AssetController {
 			const { id } = req.params
 			let resp = {}
 
-			if (resp) return SuccessResponse(res, 'file deleted')
-			else ErrorResponse(res, 'error while deleting file', resp)
+			if (resp) return SuccessResponse(req, res, 'file deleted')
+			else ErrorResponse(req, res, 'error while deleting file', resp)
 		} else {
-			return ErrorResponse(res, 'unauthorized', null, 401)
+			return ErrorResponse(req, res, 'unauthorized', null, 401)
 		}
 	}
 }

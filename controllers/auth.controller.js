@@ -22,19 +22,19 @@ class AuthController {
 		try {
 			existingUser = await User.findOne({ email: email }).select('-image')
 		} catch (error) {
-			return ErrorResponse(res, unknownError, error)
+			return ErrorResponse(req, res, unknownError, error)
 		}
 
 		// Check if no user is returned
 		if (!existingUser) {
-			return ErrorResponse(res, null, "we couldn't find your account", 404)
+			return ErrorResponse(req, res, null, "we couldn't find your account", 404)
 		}
 
 		// Check if password matches the record found
 		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
 
 		if (isValidLogin === false) {
-			return ErrorResponse(res, null, 'invalid credentials')
+			return ErrorResponse(req, res, null, 'invalid credentials')
 		} else {
 			token = generateAccessToken({
 				_id: existingUser.id,
@@ -68,17 +68,17 @@ class AuthController {
 		const unknownError = 'error! something went wrong on our end.'
 
 		existingUser = await Doctor.findOne({ email: email }).catch((error) => {
-			return ErrorResponse(res, unknownError, error)
+			return ErrorResponse(req, res, unknownError, error)
 		})
 
 		if (!existingUser) {
-			return ErrorResponse(res, null, "we couldn't find your doctor account", 404)
+			return ErrorResponse(req, res, null, "we couldn't find your doctor account", 404)
 		}
 
 		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
 
 		if (isValidLogin === false) {
-			return ErrorResponse(res, null, 'invalid credentials')
+			return ErrorResponse(req, res, null, 'invalid credentials')
 		} else {
 			token = generateAccessToken({
 				_id: existingUser.id,
@@ -110,9 +110,9 @@ class AuthController {
 
 		try {
 			const authUser = await User.findById(_id).select('_id email role')
-			return SuccessResponse(res, authUser, undefined)
+			return SuccessResponse(req, res, authUser, undefined)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error finding auth user', 404)
+			return ErrorResponse(req, res, error, 'error finding auth user', 404)
 		}
 	}
 
@@ -126,13 +126,13 @@ class AuthController {
 		const token = req.headers.authorization && req.headers.authorization.split(' ')[1]
 
 		// token not found
-		if (!token) return ErrorResponse(res, null, 'token not found', 404)
+		if (!token) return ErrorResponse(req, res, null, 'token not found', 404)
 
 		const decodedToken = jwt.decode(token, { complete: true, json: true })
 
 		if (decodedToken == null)
-			return ErrorResponse(res, null, 'this token might be invalid', 500)
-		return SuccessResponse(res, decodedToken.payload, 'token decoded')
+			return ErrorResponse(req, res, null, 'this token might be invalid', 500)
+		return SuccessResponse(req, res, decodedToken.payload, 'token decoded')
 	}
 }
 

@@ -1,4 +1,4 @@
-const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
+const { SuccessResponse, ErrorResponse, formatBytes } = require('../lib/helpers')
 const Category = require('../models/categories')
 
 class CategoryController {
@@ -8,11 +8,47 @@ class CategoryController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const createdCategory = await Category.create(req.body).catch((error) => {
-			ErrorResponse(res, 'error creating  category', error, 500)
-		})
+		if (!req.file) return ErrorResponse(req, res, 'please select an image', 400)
 
-		SuccessResponse(res, 'category created', createdCategory, 201)
+		const maximum_file_szie = 563_200 // 550 Kilobytes (KB)
+		const fileType = req.file.mimetype
+
+		const { name } = req.body
+
+		let createdCategory
+		try {
+			// file type validation
+			if (fileType.startsWith('image/') === false) {
+				return ErrorResponse(req, res, null, 'invalid upload file type')
+			}
+
+			// Check if the file size is larger than maximum
+			if (req.file.size > maximum_file_szie) {
+				return ErrorResponse(
+					req,
+					res,
+					`file too large, ensure images are ${formatBytes(
+						maximum_file_szie
+					)} or less. Your file is ${formatBytes(req.file.size)}.`,
+					null,
+					400
+				)
+			}
+
+			createdCategory = await Category.create({
+				name,
+				image: {
+					data: Buffer.from(req.file.buffer),
+					contentType: req.file.mimetype,
+				},
+			})
+		} catch (error) {
+			console.log(error)
+			return ErrorResponse(req, res, 'error creating category', error, 500)
+		}
+		const _created = createdCategory.toObject()
+		delete _created.image
+		return SuccessResponse(req, res, 'category created', _created, 201)
 	}
 
 	/**
@@ -21,14 +57,22 @@ class CategoryController {
 	 * @param {import("express").Response} res
 	 */
 	static getAll = async (req, res) => {
-		const categories = await Category.find().catch((error) => {
-			return ErrorResponse(res, 'error finding categories', error, 500)
-		})
+		let categories
+		try {
+			categories = await Category.find().select('-image')
+		} catch (error) {
+			return ErrorResponse(req, res, 'error finding categories', error, 500)
+		}
 
 		if (!categories || categories.lenght <= 0)
-			return SuccessResponse(res, 'there are no categories at the moment', categories)
+			return SuccessResponse(
+				req,
+				res,
+				'there are no categories at the moment',
+				categories
+			)
 
-		return SuccessResponse(res, 'categories found', categories)
+		return SuccessResponse(req, res, 'categories found', categories)
 	}
 
 	/**
@@ -37,13 +81,22 @@ class CategoryController {
 	 * @param {import("express").Response} res
 	 */
 	static getOne = async (req, res) => {
-		const category = await Category.findById(req.params.id).catch((error) => {
-			return ErrorResponse(res, 'error finding the category with model', error, 500)
-		})
+		let category
+		try {
+			category = await Category.findById(req.params.id).select('-image')
+		} catch (error) {
+			return ErrorResponse(
+				req,
+				res,
+				'error finding the category with model',
+				error,
+				500
+			)
+		}
 
-		if (!category) return SuccessResponse(res, 'category not found', category)
+		if (!category) return SuccessResponse(req, res, 'category not found', category)
 
-		return SuccessResponse(res, 'category found', category)
+		return SuccessResponse(req, res, 'category found', category)
 	}
 
 	/**
@@ -55,23 +108,26 @@ class CategoryController {
 		const { name } = req.body
 		const { id: _id } = req.params
 
-		if (!name) return ErrorResponse(res, 'no data sent for an update', null, 200)
+		if (!name) return ErrorResponse(req, res, 'no data sent for an update', null, 200)
 
-		const category = await Category.findOne({ _id }).catch((error) => {
-			return ErrorResponse(res, 'error while trying to find category', error, 500)
-		})
+		let category
+		try {
+			category = await Category.findOne({ _id }).select('-image')
+		} catch (error) {
+			return ErrorResponse(req, res, 'error while trying to find category', error, 500)
+		}
 
-		if (!category) return ErrorResponse(res, 'no category found')
+		if (!category) return ErrorResponse(req, res, 'no category found')
 
 		const updatedCategory = await Category.updateOne(
 			{ _id },
 			{ name },
-			{ returnDocument: true, returnOriginal: true, new: true }
+			{ new: true }
 		).catch((error) => {
-			return ErrorResponse(res, 'error updating category', error, 500)
+			return ErrorResponse(req, res, 'error updating category', error, 500)
 		})
 
-		SuccessResponse(res, 'category updated', updatedCategory)
+		SuccessResponse(req, res, 'category updated', updatedCategory)
 	}
 
 	/**
@@ -80,16 +136,19 @@ class CategoryController {
 	 * @param {import("express").Response} res
 	 */
 	static deleteOne = async (req, res) => {
-		let category = await Category.findByIdAndRemove(req.params.id, {
-			returnDocument: true,
-		}).catch((error) => {
-			ErrorResponse(res, 'error deleting category', error, 500)
-		})
+		let category
+		try {
+			category = await Category.findByIdAndRemove(req.params.id, {
+				returnDocument: true,
+			})
+		} catch (error) {
+			return ErrorResponse(req, res, 'error deleting category', error, 500)
+		}
 
 		if (!category)
-			return ErrorResponse(res, 'category not found for removal', null, 200)
+			return ErrorResponse(req, res, 'category not found for removal', null, 200)
 
-		return SuccessResponse(res, 'category deleted', category.name)
+		return SuccessResponse(req, res, 'category deleted', category.name)
 	}
 }
 
