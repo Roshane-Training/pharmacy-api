@@ -1,5 +1,4 @@
 const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
-const S3Helper = require('../lib/s3Helper')
 const Product = require('../models/products')
 
 class AssetController {
@@ -36,8 +35,8 @@ class AssetController {
 		const authRole = req?.['user']['role']
 
 		if (authRole == UserType.admin) {
-			const { s3ID } = req.params
-			const resp = await S3Helper.delete(s3ID).catch((err) => console.error(err))
+			const { id } = req.params
+			let resp = {}
 
 			if (resp) return SuccessResponse(res, 'file deleted')
 			else ErrorResponse(res, 'error while deleting file', resp)

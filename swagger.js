@@ -161,17 +161,11 @@ const options = {
 								'Number range from between 1 to 5 that indicates the level of preference or popularity of this Product',
 							example: '4',
 						},
-						main_categoryId: {
+						categoryId: {
 							type: String,
 							description:
 								'Mongoose Object ID as a String of the Category of this Product from the Categories Collection',
 							example: '636a5ee446854e5b6141e295',
-						},
-						sub_categoryId: {
-							type: String,
-							description:
-								'Mongoose Object ID as a String of the Category of this Product from the Sub Categories Collection',
-							example: '636a65e3d095415777ea8c6a',
 						},
 					},
 				},
@@ -190,27 +184,6 @@ const options = {
 						},
 					},
 				},
-				SubCategory: {
-					type: Object,
-					properties: {
-						id: {
-							type: String,
-							description: 'Mongoose Object ID as a String',
-							example: '63228ae60e8b432603389f39',
-						},
-						name: {
-							type: String,
-							description: 'Name or Title of this Sub Category',
-							example: 'Paracetamols',
-						},
-						main_categoryId: {
-							type: String,
-							description:
-								'Mongoose Object ID as a String of the Category that this Sub Category is grouped with',
-							example: '636a5ee446854e5b6141e295',
-						},
-					},
-				},
 			},
 		},
 	},
@@ -219,8 +192,7 @@ const options = {
 		'./routes/auth.routes.js',
 		'./routes/doctor.routes.js',
 		'./routes/products.routes.js',
-		'./routes/main_categories.route.js',
-		'./routes/sub_categories.route.js',
+		'./routes/categories.route.js',
 	],
 }
 

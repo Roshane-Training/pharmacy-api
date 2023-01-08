@@ -16,8 +16,7 @@ class DoctorController {
 	static createOne = async (req, res) => {
 		if (!req.file) return ErrorResponse(res, 'please select an image', 400)
 
-		const uploadedImageKey = await S3Helper.upload(req.file, Date.now().toString())
-
+		const maximum_file_szie = 563_200 // 550 Kilobytes (KB)
 		const fileType = req.file.mimetype
 
 		let createdDoctor
@@ -36,10 +35,21 @@ class DoctorController {
 		try {
 			// file type validation
 			if (fileType.startsWith('image/') === false) {
-				S3Helper.delete(uploadedImageKey)
 				return ErrorResponse(res, null, 'invalid upload file type')
 			}
 
+			//Check if the file size is larger than 500000 bytes(0.5MB)
+			if (req.file.size > maximum_file_szie) {
+				return ErrorResponse(
+					req,
+					res,
+					`file too large, ensure images are ${formatBytes(
+						maximum_file_szie
+					)} or less. Your file is ${formatBytes(req.file.size)}.`,
+					null,
+					400
+				)
+			}
 			createdDoctor = await Doctor.create({
 				fullName,
 				title,
@@ -50,12 +60,12 @@ class DoctorController {
 				email,
 				phoneNumber,
 				password,
-				image: uploadedImageKey.key,
+				image: {
+					data: Buffer.from(req.file.buffer),
+					contentType: req.file.mimetype,
+				},
 			})
 		} catch (error) {
-			// delete uploaded image by multer if there's an error in creation
-			S3Helper.delete(uploadedImageKey)
-
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
 
@@ -65,7 +75,8 @@ class DoctorController {
 			errors = message.replace('doctors validation failed: ', '').split(', ')
 
 			// this handles duplicated email
-			if (message.includes('E11000') && message.includes('email')) {
+			if (error.code == E11000 && error.keyValue.email) {
+				respMessage = `'${error.keyValue.email}' is being used`
 				return ErrorResponse(res, [], respMessage, 400)
 			}
 

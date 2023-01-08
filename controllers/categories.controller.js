@@ -8,11 +8,11 @@ class CategoryController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const createdMaincategory = await Category.create(req.body).catch((error) => {
+		const createdCategory = await Category.create(req.body).catch((error) => {
 			ErrorResponse(res, 'error creating  category', error, 500)
 		})
 
-		SuccessResponse(res, 'category created', createdMaincategory, 201)
+		SuccessResponse(res, 'category created', createdCategory, 201)
 	}
 
 	/**
@@ -21,18 +21,14 @@ class CategoryController {
 	 * @param {import("express").Response} res
 	 */
 	static getAll = async (req, res) => {
-		const maincategories = await Category.find().catch((error) => {
+		const categories = await Category.find().catch((error) => {
 			return ErrorResponse(res, 'error finding categories', error, 500)
 		})
 
-		if (!maincategories || maincategories.lenght <= 0)
-			return SuccessResponse(
-				res,
-				'there are no categories at the moment',
-				maincategories
-			)
+		if (!categories || categories.lenght <= 0)
+			return SuccessResponse(res, 'there are no categories at the moment', categories)
 
-		return SuccessResponse(res, 'categories found', maincategories)
+		return SuccessResponse(res, 'categories found', categories)
 	}
 
 	/**

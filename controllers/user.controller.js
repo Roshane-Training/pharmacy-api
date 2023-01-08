@@ -1,7 +1,6 @@
 require('dotenv/config')
-const { ErrorResponse, SuccessResponse, S3Helper } = require('../lib/helpers')
+const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
 const User = require('../models/user')
-const fs = require('fs')
 const bcrypt = require('bcryptjs')
 
 const USER_SELECT_FILTER = ''
@@ -13,20 +12,31 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		if (!req.file) return ErrorResponse(res, 'please select an image', 400)
+		// if (!req.file) return ErrorResponse(res, 'please select an image', 400)
 
-		const uploadedImageKey = await S3Helper.upload(req.file, Date.now().toString())
-
-		const fileType = req.file.mimetype
+		const maximum_file_szie = 563_200 // 550 Kilobytes (KB)
+		const fileType = req.file && req.file.mimetype
 
 		let createdUser
 		const { fullName, email, phoneNumber, password } = req.body
 
 		try {
 			// file type validation
-			if (fileType.startsWith('image/') === false) {
-				S3Helper.delete(uploadedImageKey)
+			if (fileType && fileType.startsWith('image/') === false) {
 				return ErrorResponse(res, null, 'invalid upload file type')
+			}
+
+			//Check if the file size is larger than 500000 bytes(0.5MB)
+			if (req.file && req.file.size > maximum_file_szie) {
+				return ErrorResponse(
+					req,
+					res,
+					`file too large, ensure images are ${formatBytes(
+						maximum_file_szie
+					)} or less. Your file is ${formatBytes(req.file.size)}.`,
+					null,
+					400
+				)
 			}
 
 			createdUser = await User.create({
@@ -34,11 +44,13 @@ class UserController {
 				email,
 				phoneNumber,
 				password,
-				image: uploadedImageKey.key,
+				image: {
+					data: Buffer.from(req?.file?.buffer ?? Buffer.from('no image')),
+					contentType: req.file && req.file.mimetype,
+				},
 			})
 		} catch (error) {
-			// delete uploaded image by multer if there's an error in creation
-			S3Helper.delete(uploadedImageKey)
+			//  if there's an error in creation
 
 			const message = new String(error.message)
 			const respMessage = 'this email is being used'
@@ -59,6 +71,7 @@ class UserController {
 		// selecting specific things to display to the user
 		let _createdUser = createdUser.toObject()
 		delete _createdUser.__v
+		delete _createdUser.image
 
 		return SuccessResponse(res, _createdUser, 'user created', 201)
 	}
