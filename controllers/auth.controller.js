@@ -18,14 +18,19 @@ class AuthController {
 
 		const unknownError = 'error! something went wrong on our end.'
 
-		existingUser = await User.findOne({ email: email }).catch((error) => {
+		// Fetch user from database
+		try {
+			existingUser = await User.findOne({ email: email }).select('-image')
+		} catch (error) {
 			return ErrorResponse(res, unknownError, error)
-		})
+		}
 
+		// Check if no user is returned
 		if (!existingUser) {
 			return ErrorResponse(res, null, "we couldn't find your account", 404)
 		}
 
+		// Check if password matches the record found
 		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
 
 		if (isValidLogin === false) {

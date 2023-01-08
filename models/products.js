@@ -11,40 +11,35 @@ const productSchema = new mongoose.Schema(
 			unique: true,
 		},
 		image: {
-			type: String,
+			data: Buffer,
+			contentType: String,
 		},
 		description: {
 			type: String,
 			required: true,
 		},
 		price: {
-			type: String,
+			type: Number,
 			required: true,
 		},
 		rating: {
 			type: Number,
 			required: false,
 		},
-		main_categoryId: {
+		categoryId: {
 			type: Schema.Types.ObjectId,
-			ref: 'Category',
-			required: false,
-		},
-		sub_categoryId: {
-			type: Schema.Types.ObjectId,
-			ref: 'SubCategory',
+			ref: 'categories',
 			required: false,
 		},
 	},
 	{ timestamps: true, collection: 'Products' }
 )
 
-productSchema.post('find', function (docs, next) {
+productSchema.post('find', function (doc, next) {
 	// Checks if the request is a query? (not too sure to be honest)
 	if (this instanceof mongoose.Query) {
-		for (let doc of docs) {
-			parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
-		}
+		console.log(doc)
+		// parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
 	}
 
 	// Pass on the request if the parse works or not
@@ -54,7 +49,7 @@ productSchema.post('find', function (docs, next) {
 productSchema.post('findOne', function (doc, next) {
 	// Checks if the request is a query? (not too sure to be honest)
 	if (this instanceof mongoose.Query) {
-		parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
+		// parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
 	}
 
 	// Pass on the request if the parse works or not

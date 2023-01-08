@@ -27,18 +27,20 @@ const s3 = new aws.S3({
 // 	},
 // })
 
-const uploadS3 = multer({
-	storage: multerS3({
-		s3: s3,
-		bucket: AWS_BUCKET,
-		acl: AWS_ACL,
-		metadata: function (req, file, cb) {
-			cb(null, { fieldName: file.fieldname })
-		},
-		key: function (req, file, cb) {
-			cb(null, Date.now().toString())
-		},
-	}),
-})
+// const uploadS3 = multer({
+// 	storage: multerS3({
+// 		s3: s3,
+// 		bucket: AWS_BUCKET,
+// 		acl: AWS_ACL,
+// 		metadata: function (req, file, cb) {
+// 			cb(null, { fieldName: file.fieldname })
+// 		},
+// 		key: function (req, file, cb) {
+// 			cb(null, Date.now().toString())
+// 		},
+// 	}),
+// })
 
-module.exports = multer({ uploadS3 })
+const storage = multer.memoryStorage()
+
+module.exports = multer({ storage })

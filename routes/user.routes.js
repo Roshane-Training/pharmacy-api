@@ -1,8 +1,14 @@
 const express = require('express')
+const AssetController = require('../controllers/asset.controller')
 const router = express.Router()
 const UserController = require('../controllers/user.controller')
 const { auth } = require('../middlewares/auth')
 const Upload = require('../middlewares/multer')
+const User = require('../models/user')
+
+router.route('/image/:id').get((req, res, next) => {
+	return AssetController.getImage(req, res, next, User)
+})
 
 router
 	.route('/')

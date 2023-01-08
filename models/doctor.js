@@ -9,7 +9,10 @@ const requiredNumber = { type: Number, required: true }
 const DoctorSchema = Schema({
 	fullName: { ...requiredString },
 	title: { ...requiredString },
-	image: { ...requiredString },
+	image: {
+		data: Buffer,
+		contentType: String,
+	},
 	ratings: { type: Array, required: false },
 	patients: { ...requiredNumber },
 	experience: { type: Array, required: true },
@@ -56,26 +59,26 @@ DoctorSchema.pre('save', async function (next) {
 	}
 })
 
-DoctorSchema.post('find', function (docs, next) {
-	// Checks if the request is a query? (not too sure to be honest)
-	if (this instanceof mongoose.Query) {
-		for (let doc of docs) {
-			parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
-		}
-	}
+// DoctorSchema.post('find', function (docs, next) {
+// 	// Checks if the request is a query? (not too sure to be honest)
+// 	if (this instanceof mongoose.Query) {
+// 		for (let doc of docs) {
+// 			parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
+// 		}
+// 	}
 
-	// Pass on the request if the parse works or not
-	next()
-})
+// 	// Pass on the request if the parse works or not
+// 	next()
+// })
 
-DoctorSchema.post('findOne', function (doc, next) {
-	// Checks if the request is a query? (not too sure to be honest)
-	if (this instanceof mongoose.Query) {
-		parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
-	}
+// DoctorSchema.post('findOne', function (doc, next) {
+// 	// Checks if the request is a query? (not too sure to be honest)
+// 	if (this instanceof mongoose.Query) {
+// 		parseImageUrl(doc, `${process.env.ASSET_URL}/images/${doc.image}`)
+// 	}
 
-	// Pass on the request if the parse works or not
-	next()
-})
+// 	// Pass on the request if the parse works or not
+// 	next()
+// })
 
 module.exports = mongoose.model('doctors', DoctorSchema)
