@@ -59,7 +59,7 @@ class CategoryController {
 	static getAll = async (req, res) => {
 		let categories
 		try {
-			categories = await Category.find().select('-image')
+			categories = await Category.find({}).select('-image')
 		} catch (error) {
 			return ErrorResponse(req, res, 'error finding categories', error, 500)
 		}
