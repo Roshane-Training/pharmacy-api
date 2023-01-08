@@ -62,3 +62,5 @@ mongoose
 		console.log('[!] Failed to connect MongoDB')
 		DevLog(err)
 	})
+
+module.exports = app
