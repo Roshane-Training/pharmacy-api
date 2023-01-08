@@ -12,7 +12,7 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		// if (!req.file) return ErrorResponse(res, 'please select an image', 400)
+		// if (!req.file) return ErrorResponse(req, res, 'please select an image', 400)
 
 		const maximum_file_szie = 563_200 // 550 Kilobytes (KB)
 		const fileType = req.file && req.file.mimetype
@@ -23,7 +23,7 @@ class UserController {
 		try {
 			// file type validation
 			if (fileType && fileType.startsWith('image/') === false) {
-				return ErrorResponse(res, null, 'invalid upload file type')
+				return ErrorResponse(req, res, null, 'invalid upload file type')
 			}
 
 			//Check if the file size is larger than 500000 bytes(0.5MB)
@@ -62,10 +62,10 @@ class UserController {
 
 			// this handles duplicated email
 			if (message.includes('E11000') && message.includes('email')) {
-				return ErrorResponse(res, [], respMessage, 400)
+				return ErrorResponse(req, res, [], respMessage, 400)
 			}
 
-			return ErrorResponse(res, errors, 'error creating user', 400)
+			return ErrorResponse(req, res, errors, 'error creating user', 400)
 		}
 
 		// selecting specific things to display to the user
@@ -73,7 +73,7 @@ class UserController {
 		delete _createdUser.__v
 		delete _createdUser.image
 
-		return SuccessResponse(res, _createdUser, 'user created', 201)
+		return SuccessResponse(req, res, _createdUser, 'user created', 201)
 	}
 
 	/**
@@ -87,13 +87,13 @@ class UserController {
 		try {
 			users = await User.find().select(USER_SELECT_FILTER)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error finding users with model')
+			return ErrorResponse(req, res, error, 'error finding users with model')
 		}
 
 		if (!users || users.length <= 0)
-			return SuccessResponse(res, users, 'users are empty at the moment')
+			return SuccessResponse(req, res, users, 'users are empty at the moment')
 
-		return SuccessResponse(res, users, 'users found')
+		return SuccessResponse(req, res, users, 'users found')
 	}
 
 	/**
@@ -107,12 +107,12 @@ class UserController {
 		try {
 			user = await User.findById(req.params.id).select(USER_SELECT_FILTER)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error finding user with model')
+			return ErrorResponse(req, res, error, 'error finding user with model')
 		}
 
-		if (!user) return SuccessResponse(res, user, 'user not found')
+		if (!user) return SuccessResponse(req, res, user, 'user not found')
 
-		return SuccessResponse(res, user, 'user found')
+		return SuccessResponse(req, res, user, 'user found')
 	}
 
 	/**
@@ -128,17 +128,17 @@ class UserController {
 			(val) => val == '' || val == null
 		)
 
-		if (isFieldsEmpty) return ErrorResponse(res, null, 'nothing to update', 200)
+		if (isFieldsEmpty) return ErrorResponse(req, res, null, 'nothing to update', 200)
 
 		let user
 
 		try {
 			user = await User.findOne({ id })
 		} catch (error) {
-			return ErrorResponse(res, error, 'error while trying to find user')
+			return ErrorResponse(req, res, error, 'error while trying to find user')
 		}
 
-		if (!user) return ErrorResponse(res, `no user found`)
+		if (!user) return ErrorResponse(req, res, `no user found`)
 
 		password = bcrypt.hashSync(password, 10)
 
@@ -151,10 +151,10 @@ class UserController {
 				{ new: true }
 			)
 		} catch (error) {
-			return ErrorResponse(res, error, 'error updating user')
+			return ErrorResponse(req, res, error, 'error updating user')
 		}
 
-		return SuccessResponse(res, updatedUser, 'user updated')
+		return SuccessResponse(req, res, updatedUser, 'user updated')
 	}
 
 	/**
@@ -170,12 +170,12 @@ class UserController {
 				returnDocument: true,
 			})
 		} catch (error) {
-			return ErrorResponse(res, error, 'error deleting with user model')
+			return ErrorResponse(req, res, error, 'error deleting with user model')
 		}
 
-		if (!user) return ErrorResponse(res, null, 'user not found')
+		if (!user) return ErrorResponse(req, res, null, 'user not found')
 
-		return SuccessResponse(res, user, 'user deleted')
+		return SuccessResponse(req, res, user, 'user deleted')
 	}
 }
 

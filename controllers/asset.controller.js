@@ -1,5 +1,6 @@
 const { ErrorResponse, SuccessResponse } = require('../lib/helpers')
-const Product = require('../models/products')
+const fs = require('fs')
+const path = require('path')
 
 class AssetController {
 	/**
@@ -19,7 +20,13 @@ class AssetController {
 			console.log('Model Find Error', error)
 		}
 
-		if (document == null) return ErrorResponse(req, res, 'image not found', null, 404)
+		if (document == null) {
+			const imageBuffer = fs.readFileSync(
+				path.resolve(path.dirname(__dirname) + '/resources/no_image.png')
+			)
+			res.set('content-type', 'image/png')
+			return res.send(imageBuffer)
+		}
 
 		res.set('content-type', document.image.contentType)
 		return res.send(document.image.data)
@@ -38,10 +45,10 @@ class AssetController {
 			const { id } = req.params
 			let resp = {}
 
-			if (resp) return SuccessResponse(res, 'file deleted')
-			else ErrorResponse(res, 'error while deleting file', resp)
+			if (resp) return SuccessResponse(req, res, 'file deleted')
+			else ErrorResponse(req, res, 'error while deleting file', resp)
 		} else {
-			return ErrorResponse(res, 'unauthorized', null, 401)
+			return ErrorResponse(req, res, 'unauthorized', null, 401)
 		}
 	}
 }

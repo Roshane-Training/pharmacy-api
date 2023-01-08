@@ -8,7 +8,7 @@ class ProductController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		// if (!req.file) return ErrorResponse(res, 'please select an image', 400)
+		// if (!req.file) return ErrorResponse(req, res, 'please select an image', 400)
 
 		const maximum_file_szie = 563_200 // 550 Kilobytes (KB)
 		const fileType = req.file.mimetype
@@ -19,7 +19,7 @@ class ProductController {
 		try {
 			//file type validation
 			if (fileType.startsWith('image/') === false) {
-				return ErrorResponse(res, null, 'invalid upload file type')
+				return ErrorResponse(req, res, null, 'invalid upload file type')
 			}
 
 			//Check if the file size is larger than 500000 bytes(0.5MB)
@@ -57,12 +57,12 @@ class ProductController {
 				// clear null so developer details are hidden
 				error = null
 			}
-			return ErrorResponse(res, errorMessage, error, statusCode)
+			return ErrorResponse(req, res, errorMessage, error, statusCode)
 		}
 
 		const _created = createdProduct.toObject()
 		delete _created.image
-		return SuccessResponse(res, 'product created', _created, 201)
+		return SuccessResponse(req, res, 'product created', _created, 201)
 	}
 
 	/**
@@ -76,13 +76,13 @@ class ProductController {
 			products = await Product.find().select('-image')
 		} catch (error) {
 			console.log(error)
-			return ErrorResponse(res, 'error finding products', error, 500)
+			return ErrorResponse(req, res, 'error finding products', error, 500)
 		}
 
 		if (!products)
-			return SuccessResponse(res, 'there are no products at this time', products)
+			return SuccessResponse(req, res, 'there are no products at this time', products)
 
-		return SuccessResponse(res, 'products found', products)
+		return SuccessResponse(req, res, 'products found', products)
 	}
 
 	/**
@@ -97,14 +97,20 @@ class ProductController {
 			product = await Product.findById(req.params.id).select('-image')
 		} catch (error) {
 			console.log(error)
-			return ErrorResponse(res, 'error finding the product with the model', error, 500)
+			return ErrorResponse(
+				req,
+				res,
+				'error finding the product with the model',
+				error,
+				500
+			)
 		}
 
 		if (!product) {
-			return ErrorResponse(res, 'product not found', null, 404)
+			return ErrorResponse(req, res, 'product not found', null, 404)
 		}
 
-		return SuccessResponse(res, 'product found', product)
+		return SuccessResponse(req, res, 'product found', product)
 	}
 
 	/**
@@ -117,23 +123,23 @@ class ProductController {
 		const { id: _id } = req.params
 
 		if (!name && !image && !price && !categoryId)
-			return ErrorResponse(res, 'no data sent for an update', null, 200)
+			return ErrorResponse(req, res, 'no data sent for an update', null, 200)
 
 		const product = await Product.findOne({ _id }).catch((error) => {
-			return ErrorResponse(res, 'error while trying to find product', error, 500)
+			return ErrorResponse(req, res, 'error while trying to find product', error, 500)
 		})
 
-		if (!product) return ErrorResponse(res, 'no product found')
+		if (!product) return ErrorResponse(req, res, 'no product found')
 
 		const updatedProduct = await Product.updateOne(
 			{ _id },
 			{ name, image, description, price, rating, categoryId },
 			{ returnDocument: true, returnOriginal: true, new: true }
 		).catch((error) => {
-			return ErrorResponse(res, 'error updating product', error, 500)
+			return ErrorResponse(req, res, 'error updating product', error, 500)
 		})
 
-		SuccessResponse(res, 'product updated', updatedProduct)
+		SuccessResponse(req, res, 'product updated', updatedProduct)
 	}
 
 	/**
@@ -149,12 +155,12 @@ class ProductController {
 				'-image'
 			)
 		} catch (error) {
-			return ErrorResponse(res, 'error deleting product', error, 500)
+			return ErrorResponse(req, res, 'error deleting product', error, 500)
 		}
 
-		if (!product) return ErrorResponse(res, 'product not found', null, 404)
+		if (!product) return ErrorResponse(req, res, 'product not found', null, 404)
 
-		return SuccessResponse(res, 'product deleted', product.name)
+		return SuccessResponse(req, res, 'product deleted', product.name)
 	}
 }
 

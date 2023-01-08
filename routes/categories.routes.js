@@ -1,6 +1,13 @@
 const express = require('express')
+const AssetController = require('../controllers/asset.controller')
 const router = express.Router()
 const CategoriesController = require('../controllers/categories.controller')
+const Upload = require('../middlewares/multer')
+const Category = require('../models/categories')
+
+router.route('/image/:id').get((req, res, next) => {
+	return AssetController.getImage(req, res, next, Category)
+})
 
 router
 	.route('/')
@@ -93,7 +100,7 @@ router
 	 *                                              example: Server Error
 	 *
 	 */
-	.post(CategoriesController.createOne)
+	.post(Upload.single('image'), CategoriesController.createOne)
 
 router
 	.route('/:id')
